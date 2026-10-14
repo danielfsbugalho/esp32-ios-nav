@@ -1,0 +1,56 @@
+name: App em Portugues (IPA)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Montar app iOS
+    runs-on: macos-26
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Selecionar Xcode
+        run: |
+          if [ -d "/Applications/Xcode_26.6.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_26.6.app/Contents/Developer
+          elif [ -d "/Applications/Xcode_26.app" ]; then
+            sudo xcode-select -s /Applications/Xcode_26.app/Contents/Developer
+          fi
+          xcodebuild -version
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Baixar pacotes
+        working-directory: mobile_app
+        run: |
+          flutter config --no-enable-swift-package-manager
+          flutter pub get
+
+      - name: Pod install
+        working-directory: mobile_app/ios
+        run: pod install --repo-update
+
+      - name: Compilar
+        working-directory: mobile_app
+        run: flutter build ios --release --no-codesign
+
+      - name: Gerar IPA
+        working-directory: mobile_app
+        run: |
+          APP_PATH=$(find build -name "Runner.app" -type d | head -n 1)
+          rm -rf Payload && mkdir Payload
+          cp -R "$APP_PATH" Payload/Runner.app
+          zip -r -y -q ESP32Nav-PT.ipa Payload/
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ESP32Nav-PT-ipa
+          path: mobile_app/ESP32Nav-PT.ipa
+          retention-days: 14
