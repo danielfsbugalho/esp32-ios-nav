@@ -76,7 +76,7 @@ class RouteOptionCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              route.summary.isNotEmpty ? route.summary : 'Lộ trình tối ưu',
+              route.summary.isNotEmpty ? route.summary : 'Rota ideal',
               style: AppTypography.subheadline,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,

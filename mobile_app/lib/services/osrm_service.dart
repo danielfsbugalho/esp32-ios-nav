@@ -98,41 +98,41 @@ class OsrmService {
 
       if (mode == 'bike') {
         if (isFastest) {
-          title = '🏍️ Xe máy - Nhanh nhất';
-          subtitle = r.summary.isNotEmpty ? 'Qua ${r.summary} • Trục đường chính' : 'Lộ trình tối ưu tránh đường cấm xe máy';
+          title = '🏍️ Moto - Mais rápida';
+          subtitle = r.summary.isNotEmpty ? 'Via ${r.summary} • Vias principais' : 'Rota ideal para moto';
           themeColor = const Color(0xFF00F0FF);
         } else if (isShortest) {
           final savedKm = ((primary.totalDistanceMeters - r.totalDistanceMeters) / 1000.0);
-          title = '🏍️ Xe máy - Ngắn nhất';
+          title = '🏍️ Moto - Mais curta';
           subtitle = savedKm > 0.1
-              ? 'Tiết kiệm ${savedKm.toStringAsFixed(1)} km qua lối cắt nội đô'
-              : (r.summary.isNotEmpty ? 'Qua ${r.summary}' : 'Lối đi ngắn qua đường đô thị');
+              ? 'Economiza ${savedKm.toStringAsFixed(1)} km por dentro da cidade'
+              : (r.summary.isNotEmpty ? 'Qua ${r.summary}' : 'Atalho pela cidade');
           themeColor = const Color(0xFF10B981);
         } else {
-          title = '🏍️ Tuyến thay thế ${i + 1}';
-          subtitle = r.summary.isNotEmpty ? 'Qua ${r.summary}' : 'Đường thoáng, ít đèn đỏ';
+          title = '🏍️ Alternativa ${i + 1}';
+          subtitle = r.summary.isNotEmpty ? 'Qua ${r.summary}' : 'Via livre, poucos semáforos';
           themeColor = const Color(0xFFF59E0B);
         }
       } else if (mode == 'foot') {
-        title = isFastest ? '🚶 Lối đi bộ nhanh nhất' : '🚶 Lối đi bộ thay thế';
-        subtitle = 'Tối ưu vỉa hè và đường cắt ngắn';
+        title = isFastest ? '🚶 A pé - Mais rápida' : '🚶 A pé - Alternativa';
+        subtitle = 'Calçadas e atalhos';
         themeColor = const Color(0xFF38BDF8);
       } else {
         // Car / Driving
         if (isFastest) {
-          title = '🚗 Ô tô - Nhanh nhất';
-          subtitle = r.summary.isNotEmpty ? 'Qua ${r.summary} • Ưu tiên đường lớn' : 'Thời gian ngắn nhất, ưu tiên đường lớn';
+          title = '🚗 Carro - Mais rápida';
+          subtitle = r.summary.isNotEmpty ? 'Via ${r.summary} • Prioriza vias principais' : 'Menor tempo, prioriza vias principais';
           themeColor = const Color(0xFF00F0FF);
         } else if (isShortest) {
           final savedKm = ((primary.totalDistanceMeters - r.totalDistanceMeters) / 1000.0);
-          title = '🚗 Ô tô - Ngắn nhất';
+          title = '🚗 Carro - Mais curta';
           subtitle = savedKm > 0.1
-              ? 'Tiết kiệm ${savedKm.toStringAsFixed(1)} km so với lối chính'
-              : 'Cự ly ngắn nhất qua nội đô';
+              ? 'Economiza ${savedKm.toStringAsFixed(1)} km em relação à principal'
+              : 'Menor distância pela cidade';
           themeColor = const Color(0xFF10B981);
         } else {
-          title = '🚗 Tuyến thay thế ${i + 1}';
-          subtitle = r.summary.isNotEmpty ? 'Qua ${r.summary}' : 'Đường thoáng, ít giao cắt';
+          title = '🚗 Alternativa ${i + 1}';
+          subtitle = r.summary.isNotEmpty ? 'Qua ${r.summary}' : 'Via livre, poucos cruzamentos';
           themeColor = const Color(0xFFF59E0B);
         }
       }
@@ -205,7 +205,7 @@ class OsrmService {
                 distanceMeters: dist,
                 streetName: name.isNotEmpty ? name : null,
                 success: false,
-                errorMessage: 'Điểm nằm quá xa đường giao thông (${dist.toStringAsFixed(0)}m > ${maxRadiusMeters.toStringAsFixed(0)}m)',
+                errorMessage: 'Ponto longe demais de uma via (${dist.toStringAsFixed(0)}m > ${maxRadiusMeters.toStringAsFixed(0)}m)',
               );
             }
           }
@@ -220,7 +220,7 @@ class OsrmService {
       snapped: point,
       distanceMeters: 0,
       success: false,
-      errorMessage: 'Không thể tìm đường giao thông gần tọa độ',
+      errorMessage: 'Nenhuma via perto do ponto',
     );
   }
 
@@ -267,7 +267,7 @@ class OsrmService {
           provider: 'osrm2',
           latency: const Duration(milliseconds: 800),
           errorType: 'network',
-          safeMessage: 'Lỗi OSRM secondary: $e',
+          safeMessage: 'Erro OSRM secundário: $e',
         );
         onDiagnostic?.call(failRes);
         if (!completer.isCompleted) {
@@ -304,7 +304,7 @@ class OsrmService {
         provider: 'osrm1',
         latency: Duration.zero,
         errorType: 'network',
-        safeMessage: 'Lỗi OSRM primary: $e',
+        safeMessage: 'Erro OSRM principal: $e',
       );
       onDiagnostic?.call(primaryFailure!);
       if (!secondaryLaunched) {
@@ -382,26 +382,26 @@ class OsrmService {
               httpStatus: 200,
               apiCode: 'EmptyRoutes',
               errorType: 'emptyResponse',
-              safeMessage: 'Dữ liệu lộ trình OSRM rỗng',
+              safeMessage: 'Rota OSRM vazia',
             );
           }
         } else {
           final errorType = (apiCode == 'NoSegment' || apiCode == 'NoRoute') ? 'noRoute' : 'invalidRequest';
-          final msg = data['message']?.toString() ?? 'Không tìm thấy lộ trình';
+          final msg = data['message']?.toString() ?? 'Nenhuma rota encontrada';
           return ProviderRouteResult.failure(
             provider: serverTag,
             latency: latency,
             httpStatus: 200,
             apiCode: apiCode,
             errorType: errorType,
-            safeMessage: errorType == 'noRoute' ? 'Không tìm thấy đường phù hợp gần tọa độ' : msg,
+            safeMessage: errorType == 'noRoute' ? 'Nenhuma via adequada perto do ponto' : msg,
           );
         }
       }
 
       // Non-200 Diagnostic
       String errorType = 'http';
-      String safeMessage = 'Lỗi máy chủ OSRM (HTTP ${response.statusCode})';
+      String safeMessage = 'Erro no servidor OSRM (HTTP ${response.statusCode})';
       String? apiCode;
 
       try {
@@ -410,10 +410,10 @@ class OsrmService {
         final msg = errData['message']?.toString();
         if (response.statusCode == 429) {
           errorType = 'rateLimited';
-          safeMessage = 'Dịch vụ OSRM đang quá tải. Hãy thử lại.';
+          safeMessage = 'Serviço OSRM sobrecarregado. Tente de novo.';
         } else if (apiCode == 'NoSegment' || apiCode == 'NoRoute') {
           errorType = 'noRoute';
-          safeMessage = 'Không tìm thấy đường nối giữa 2 điểm';
+          safeMessage = 'Nenhum caminho entre os 2 pontos';
         } else if (msg != null && msg.isNotEmpty) {
           safeMessage = msg;
         }
@@ -435,7 +435,7 @@ class OsrmService {
         provider: serverTag,
         latency: latency,
         errorType: 'timeout',
-        safeMessage: 'Quá thời gian kết nối OSRM',
+        safeMessage: 'Tempo esgotado ao conectar ao OSRM',
       );
     } on SocketException catch (e) {
       final latency = stopwatch.elapsed;
@@ -446,7 +446,7 @@ class OsrmService {
         provider: serverTag,
         latency: latency,
         errorType: errorType,
-        safeMessage: isDns ? 'Không thể phân giải tên miền máy chủ OSRM (DNS)' : 'Không thể kết nối mạng tới OSRM',
+        safeMessage: isDns ? 'Não foi possível achar o servidor OSRM (DNS)' : 'Sem conexão com o OSRM',
       );
     } on HandshakeException catch (e) {
       final latency = stopwatch.elapsed;
@@ -455,7 +455,7 @@ class OsrmService {
         provider: serverTag,
         latency: latency,
         errorType: 'tls',
-        safeMessage: 'Lỗi bảo mật kết nối OSRM (TLS)',
+        safeMessage: 'Erro de segurança na conexão OSRM (TLS)',
       );
     } catch (e) {
       final latency = stopwatch.elapsed;
@@ -464,7 +464,7 @@ class OsrmService {
         provider: serverTag,
         latency: latency,
         errorType: e is FormatException ? 'parseError' : 'network',
-        safeMessage: 'Lỗi kết nối OSRM: $e',
+        safeMessage: 'Erro de conexão OSRM: $e',
       );
     }
   }
@@ -520,7 +520,7 @@ class OsrmService {
             final distance = (step['distance'] as num).toDouble();
             final duration = (step['duration'] as num).toDouble();
             final name = (step['name'] as String? ?? '').trim();
-            final streetName = name.isEmpty ? 'Đường không tên' : name;
+            final streetName = name.isEmpty ? 'Rua sem nome' : name;
 
             final instruction = buildInstruction(manType, manModifier, streetName, maneuver);
 
@@ -537,14 +537,14 @@ class OsrmService {
           }
         }
 
-        String summary = 'Lộ trình ${rIdx + 1}';
+        String summary = 'Rota ${rIdx + 1}';
         if (legs.isNotEmpty && legs[0]['summary'] != null && (legs[0]['summary'] as String).isNotEmpty) {
           summary = '${legs[0]['summary']}';
         }
 
         parsedRoutes.add(NavRoute(
-          title: 'Lộ trình ${rIdx + 1}',
-          subtitle: 'Tuyến OSRM',
+          title: 'Rota ${rIdx + 1}',
+          subtitle: 'Rota OSRM',
           totalDistanceMeters: totalDistance,
           totalDurationSeconds: totalDuration,
           polylinePoints: polylinePoints,
@@ -574,35 +574,35 @@ class OsrmService {
 
   /// Helper to create localized turn instructions
   static String buildInstruction(String type, String? modifier, String street, [Map<String, dynamic>? maneuver]) {
-    if (type == 'depart') return 'Bắt đầu di chuyển trên $street';
-    if (type == 'arrive') return 'Bạn đã đến điểm đến!';
+    if (type == 'depart') return 'Siga pela $street';
+    if (type == 'arrive') return 'Você chegou ao destino!';
     if (type == 'roundabout' || type == 'rotary') {
       final exit = maneuver?['exit'] as int?;
       if (exit != null && exit > 0) {
-        return 'Vào vòng xuyến, đi theo lối ra thứ $exit vào $street';
+        return 'Na rotatória, pegue a ${exit}ª saída para a $street';
       }
-      return 'Đi vào vòng xuyến, tiếp tục theo $street';
+      return 'Entre na rotatória e siga pela $street';
     }
 
     final mod = modifier?.toLowerCase() ?? '';
     if (type == 'fork') {
-      if (mod.contains('left')) return 'Đi theo nhánh rẽ bên trái vào $street';
-      return 'Đi theo nhánh rẽ bên phải vào $street';
+      if (mod.contains('left')) return 'Pegue a saída à esquerda para a $street';
+      return 'Pegue a saída à direita para a $street';
     }
-    if (type == 'on ramp') return 'Đi vào đường nhánh nhập làn $street';
-    if (type == 'off ramp') return 'Rẽ vào lối ra đường $street';
-    if (type == 'merge') return 'Nhập làn vào đường $street';
+    if (type == 'on ramp') return 'Entre na $street';
+    if (type == 'off ramp') return 'Pegue a saída para a $street';
+    if (type == 'merge') return 'Entre na $street';
 
-    if (mod.contains('sharp right')) return 'Rẽ gắt sang phải vào $street';
-    if (mod.contains('slight right')) return 'Chếch sang phải vào $street';
-    if (mod.contains('right')) return 'Rẽ phải vào $street';
-    if (mod.contains('sharp left')) return 'Rẽ gắt sang trái vào $street';
-    if (mod.contains('slight left')) return 'Chếch sang trái vào $street';
-    if (mod.contains('left')) return 'Rẽ trái vào $street';
-    if (mod.contains('uturn') || mod.contains('u-turn')) return 'Quay đầu xe trên $street';
-    if (mod.contains('straight')) return 'Đi thẳng trên $street';
+    if (mod.contains('sharp right')) return 'Vire acentuadamente à direita na $street';
+    if (mod.contains('slight right')) return 'Mantenha-se à direita na $street';
+    if (mod.contains('right')) return 'Vire à direita na $street';
+    if (mod.contains('sharp left')) return 'Vire acentuadamente à esquerda na $street';
+    if (mod.contains('slight left')) return 'Mantenha-se à esquerda na $street';
+    if (mod.contains('left')) return 'Vire à esquerda na $street';
+    if (mod.contains('uturn') || mod.contains('u-turn')) return 'Faça o retorno na $street';
+    if (mod.contains('straight')) return 'Siga em frente na $street';
 
-    return 'Tiếp tục đi trên $street';
+    return 'Continue na $street';
   }
 
   /// Synthesizes an emergency offline fallback route with intermediate coordinates and turn steps
@@ -619,8 +619,8 @@ class OsrmService {
     final steps = [
       NavStep(
         stepIndex: 0,
-        instruction: 'Bắt đầu di chuyển về hướng điểm đến',
-        streetName: 'Đường chính',
+        instruction: 'Siga em direção ao destino',
+        streetName: 'Via principal',
         distanceMeters: totalDist * 0.5,
         durationSeconds: durationSec * 0.5,
         coordinate: start,
@@ -628,8 +628,8 @@ class OsrmService {
       ),
       NavStep(
         stepIndex: 1,
-        instruction: 'Rẽ vào đường tiếp theo',
-        streetName: 'Đường đến đích',
+        instruction: 'Entre na próxima rua',
+        streetName: 'Rua do destino',
         distanceMeters: totalDist * 0.5,
         durationSeconds: durationSec * 0.5,
         coordinate: mid1,
@@ -638,8 +638,8 @@ class OsrmService {
       ),
       NavStep(
         stepIndex: 2,
-        instruction: 'Bạn đã đến điểm đến!',
-        streetName: 'Điểm đến',
+        instruction: 'Você chegou ao destino!',
+        streetName: 'Destino',
         distanceMeters: 0,
         durationSeconds: 0,
         coordinate: dest,
@@ -648,9 +648,9 @@ class OsrmService {
     ];
 
     return NavRoute(
-      title: 'Lộ trình tham khảo (Ngoại tuyến)',
-      subtitle: 'Đường thẳng tham khảo - Không thể dẫn đường',
-      summary: 'Tuyến đường thẳng tham khảo',
+      title: 'Rota de referência (offline)',
+      subtitle: 'Linha reta de referência - sem navegação',
+      summary: 'Linha reta de referência',
       totalDistanceMeters: totalDist,
       totalDurationSeconds: durationSec,
       steps: steps,

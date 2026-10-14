@@ -12,7 +12,7 @@ class PhotonService {
     if (query.trim().isEmpty) return [];
 
     try {
-      var urlStr = '$_photonBaseUrl/api?q=${Uri.encodeComponent(query)}&limit=10&lang=vi';
+      var urlStr = '$_photonBaseUrl/api?q=${Uri.encodeComponent(query)}&limit=10';
       if (nearLocation != null) {
         // Bias search results towards current user location
         urlStr += '&lat=${nearLocation.latitude}&lon=${nearLocation.longitude}';
@@ -34,7 +34,7 @@ class PhotonService {
           final lat = (coords[1] as num).toDouble();
 
           final props = f['properties'] as Map<String, dynamic>;
-          final name = props['name'] as String? ?? props['street'] as String? ?? 'Địa điểm';
+          final name = props['name'] as String? ?? props['street'] as String? ?? 'Local';
           final city = props['city'] as String? ?? props['state'] as String? ?? '';
           final country = props['country'] as String? ?? '';
 
@@ -79,6 +79,6 @@ class PhotonService {
         }
       }
     } catch (_) {}
-    return 'Vị trí (${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)})';
+    return 'Local (${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)})';
   }
 }

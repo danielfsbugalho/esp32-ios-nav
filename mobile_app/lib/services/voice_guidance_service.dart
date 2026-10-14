@@ -41,14 +41,14 @@ class VoiceGuidanceService extends ChangeNotifier {
 
       // 2. Select Vietnamese language (vi-VN)
       final languages = await _flutterTts.getLanguages;
-      String selectedLang = 'vi-VN';
+      String selectedLang = 'pt-BR';
       if (languages is List) {
         final hasViVN = languages.any((l) => l.toString().toLowerCase().contains('vi-vn'));
-        final hasVi = languages.any((l) => l.toString().toLowerCase().startsWith('vi'));
+        final hasVi = languages.any((l) => l.toString().toLowerCase().startsWith('pt'));
         if (hasViVN) {
-          selectedLang = 'vi-VN';
+          selectedLang = 'pt-BR';
         } else if (hasVi) {
-          selectedLang = 'vi';
+          selectedLang = 'pt';
         }
       }
       await _flutterTts.setLanguage(selectedLang);
@@ -72,7 +72,7 @@ class VoiceGuidanceService extends ChangeNotifier {
     if (_isMuted) {
       stop();
     } else {
-      speak('Bật chỉ dẫn giọng nói');
+      speak('Orientação por voz ativada');
     }
     notifyListeners();
   }
@@ -132,22 +132,22 @@ class VoiceGuidanceService extends ChangeNotifier {
 
     String distStr;
     if (distanceKm >= 1.0) {
-      distStr = '${distanceKm.toStringAsFixed(1)} ki-lô-mét';
+      distStr = '${distanceKm.toStringAsFixed(1)} quilômetros';
     } else {
-      distStr = '${(distanceKm * 1000).round()} mét';
+      distStr = '${(distanceKm * 1000).round()} metros';
     }
 
     String durStr;
     if (durationMinutes >= 60) {
       final h = durationMinutes ~/ 60;
       final m = durationMinutes % 60;
-      durStr = m > 0 ? '$h giờ $m phút' : '$h giờ';
+      durStr = m > 0 ? '$h h $m min' : '$h h';
     } else {
-      durStr = '$durationMinutes phút';
+      durStr = '$durationMinutes minutos';
     }
 
     final cleanDest = destination.split(',').first.trim();
-    final text = 'Bắt đầu dẫn đường đến $cleanDest. Quãng đường $distStr, thời gian dự kiến $durStr.';
+    final text = 'Iniciando rota para $cleanDest. Distância $distStr, tempo previsto $durStr.';
     speak(text);
   }
 
@@ -168,7 +168,7 @@ class VoiceGuidanceService extends ChangeNotifier {
       if (!_announced200mSteps.contains(stepIndex)) {
         _announced200mSteps.add(stepIndex);
         _lastSpokenStepIndex = stepIndex;
-        final String text = 'Sau $distRound mét nữa, $instruction';
+        final String text = 'Em $distRound metros, $instruction';
         speak(text);
         return;
       }
@@ -181,19 +181,19 @@ class VoiceGuidanceService extends ChangeNotifier {
         _lastSpokenStepIndex = stepIndex;
         String text;
         if (step.maneuverType == ManeuverType.arrive) {
-          text = 'Điểm đến ở ngay phía trước.';
+          text = 'O destino está logo à frente.';
         } else if (step.maneuverType == ManeuverType.turnLeft || step.maneuverType == ManeuverType.sharpLeft) {
-          text = street.isNotEmpty ? 'Chuẩn bị rẽ trái vào $street' : 'Chuẩn bị rẽ trái';
+          text = street.isNotEmpty ? 'prepare-se para virar à esquerda na $street' : 'prepare-se para virar à esquerda';
         } else if (step.maneuverType == ManeuverType.turnRight || step.maneuverType == ManeuverType.sharpRight) {
-          text = street.isNotEmpty ? 'Chuẩn bị rẽ phải vào $street' : 'Chuẩn bị rẽ phải';
+          text = street.isNotEmpty ? 'prepare-se para virar à direita na $street' : 'prepare-se para virar à direita';
         } else if (step.maneuverType == ManeuverType.slightLeft) {
-          text = street.isNotEmpty ? 'Rẽ chếch sang trái vào $street' : 'Rẽ chếch sang trái';
+          text = street.isNotEmpty ? 'mantenha-se à esquerda na $street' : 'mantenha-se à esquerda';
         } else if (step.maneuverType == ManeuverType.slightRight) {
-          text = street.isNotEmpty ? 'Rẽ chếch sang phải vào $street' : 'Rẽ chếch sang phải';
+          text = street.isNotEmpty ? 'mantenha-se à direita na $street' : 'mantenha-se à direita';
         } else if (step.maneuverType == ManeuverType.uTurn) {
-          text = 'Chuẩn bị quay đầu xe';
+          text = 'prepare-se para fazer o retorno';
         } else if (step.maneuverType == ManeuverType.roundabout) {
-          text = 'Chuẩn bị đi vào vòng xuyến';
+          text = 'prepare-se para entrar na rotatória';
         } else {
           text = instruction;
         }
@@ -206,7 +206,7 @@ class VoiceGuidanceService extends ChangeNotifier {
   /// 3. Thông báo khi đi chệch đường và đang tính toán lại
   void announceReroute() {
     if (_isMuted) return;
-    speak('Đang tính lại lộ trình.');
+    speak('Recalculando a rota.');
   }
 
   /// 4. Thông báo khi đã đến điểm đích
@@ -214,9 +214,9 @@ class VoiceGuidanceService extends ChangeNotifier {
     if (_isMuted) return;
     if (destinationName != null && destinationName.isNotEmpty) {
       final clean = destinationName.split(',').first.trim();
-      speak('Bạn đã đến điểm đến $clean. Chuyến đi hoàn tất.');
+      speak('Você chegou ao destino, $clean.');
     } else {
-      speak('Bạn đã đến điểm đến. Chuyến đi hoàn tất.');
+      speak('Você chegou ao destino.');
     }
   }
 
@@ -229,9 +229,9 @@ class VoiceGuidanceService extends ChangeNotifier {
     // Viết gọn câu
     if (text.isEmpty) {
       if (street.isNotEmpty) {
-        return 'tiếp tục đi trên $street';
+        return 'siga pela $street';
       }
-      return 'tiếp tục đi thẳng';
+      return 'siga em frente';
     }
     
     // Chuyển chữ đầu thành chữ thường để ghép câu tự nhiên

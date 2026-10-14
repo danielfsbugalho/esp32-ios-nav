@@ -35,7 +35,7 @@ class MapboxConfig {
     int limit = 10,
   }) {
     var url =
-        'https://api.maptiler.com/geocoding/${Uri.encodeComponent(query)}.json?key=$maptilerApiKey&language=vi&country=vn&limit=$limit';
+        'https://api.maptiler.com/geocoding/${Uri.encodeComponent(query)}.json?key=$maptilerApiKey&language=pt&country=br&limit=$limit';
     if (proximityLng != null && proximityLat != null) {
       url += '&proximity=$proximityLng,$proximityLat';
     }
@@ -56,7 +56,7 @@ class MapboxConfig {
   }) {
     return 'https://api.mapbox.com/directions/v5/mapbox/$profile/$startLng,$startLat;$endLng,$endLat'
         '?steps=$steps&geometries=$geometries&overview=$overview'
-        '&alternatives=$alternatives&language=vi&access_token=$accessToken';
+        '&alternatives=$alternatives&language=pt-BR&access_token=$accessToken';
   }
 
   /// True if a real MapTiler or Mapbox token has been configured

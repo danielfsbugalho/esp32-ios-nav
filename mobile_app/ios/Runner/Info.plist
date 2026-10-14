@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>ysiduc</string>
+	<string>ESP32 Nav</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>ysiduc</string>
+	<string>ESP32 Nav</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -48,27 +48,27 @@
 
 	<!-- Quyen Thu vien anh & Camera de tai anh len ESP32 -->
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Ung dung can truy cap thu vien anh de ban co the chon anh tuy chinh cai lam hinh nen man hinh ESP32</string>
+	<string>O app precisa acessar suas fotos para você escolher um fundo de tela para o ESP32</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Ung dung can Camera de ban chup anh truc tiep lam hinh nen man hinh ESP32</string>
+	<string>O app precisa da câmera para você tirar uma foto para o fundo de tela do ESP32</string>
 
 	<!-- Quyen Bluetooth ket noi ESP32 -->
 	<key>NSBluetoothAlwaysUsageDescription</key>
-	<string>Ung dung can Bluetooth de ket noi va truyen du lieu chi duong den man hinh ESP32</string>
+	<string>O app precisa do Bluetooth para enviar a navegação para a tela do ESP32</string>
 	<key>NSBluetoothPeripheralUsageDescription</key>
-	<string>Ung dung can Bluetooth de ket noi voi thiet bi ESP32</string>
+	<string>O app precisa do Bluetooth para conectar ao ESP32</string>
 
 	<!-- Quyen doc thong tin bai hat dang phat tu iPhone -->
 	<key>NSAppleMusicUsageDescription</key>
-	<string>Ung dung can doc thong tin bai hat dang phat tren dien thoai de hien thi len man hinh ESP32</string>
+	<string>O app precisa ler a música que está tocando para mostrar na tela do ESP32</string>
 
 	<!-- Quyen Vi tri GPS -->
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Ung dung can vi tri de ve lo trinh ban do va dieu huong chi duong</string>
+	<string>O app precisa da sua localização para traçar a rota e navegar</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Ung dung can vi tri lien tuc de tiep tuc cap nhat huong re sang ESP32 ngay ca khi tat man hinh</string>
+	<string>O app precisa da localização contínua para continuar enviando as curvas ao ESP32 mesmo com a tela apagada</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Ung dung can vi tri lien tuc de dieu huong trong che do nen</string>
+	<string>O app precisa da localização contínua para navegar em segundo plano</string>
 
 	<!-- Quyen Ket noi Mang Cuc bo & HTTP Khong Ma hoa (Wi-Fi ESP32 192.168.4.1) -->
 	<key>NSAppTransportSecurity</key>
@@ -79,7 +79,7 @@
 		<true/>
 	</dict>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>Ung dung can ket noi mang cuc bo de stream anh JPEG 20 FPS sang man hinh ESP32 qua Wi-Fi</string>
+	<string>O app precisa da rede local para enviar o mapa ao ESP32 pelo Wi-Fi</string>
 
 	<!-- Background Modes -->
 	<key>UIBackgroundModes</key>

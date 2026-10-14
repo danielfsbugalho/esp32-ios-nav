@@ -417,7 +417,7 @@ class EspStreamService extends ChangeNotifier with WidgetsBindingObserver {
     if (!hasEspDisplayConsumer) return;
 
     final nav = navManager;
-    final userPos = nav?.currentLocation ?? const LatLng(21.0285, 105.8542);
+    final userPos = nav?.currentLocation ?? const LatLng(-23.5505, -46.6333);
     final heading = nav?.currentHeading ?? 0.0;
     final route = nav?.activeRoute ?? nav?.previewRoute;
     final isNav = nav?.isNavigating ?? false;

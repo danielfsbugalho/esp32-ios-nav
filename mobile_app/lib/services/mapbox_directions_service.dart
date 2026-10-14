@@ -116,7 +116,7 @@ class MapboxDirectionsService {
         provider: RouteProvider.mapbox,
         latency: stopwatch.elapsed,
         failure: RouteFailureReason.invalidCoordinates,
-        errorMessage: 'Tọa độ không hợp lệ',
+        errorMessage: 'Coordenadas inválidas',
       );
     }
 
@@ -127,7 +127,7 @@ class MapboxDirectionsService {
         provider: RouteProvider.mapbox,
         latency: stopwatch.elapsed,
         failure: RouteFailureReason.invalidCoordinates,
-        errorMessage: 'Tọa độ vị trí (0,0) không hợp lệ',
+        errorMessage: 'Coordenadas (0,0) inválidas',
       );
     }
 
@@ -398,7 +398,7 @@ class MapboxDirectionsService {
               provider: primaryProvider,
               latency: stopwatch.elapsed,
               failure: RouteFailureReason.noRoute,
-              errorMessage: 'Vị trí bắt đầu nằm quá xa đường giao thông (cách ${snapStart.distanceMeters.toStringAsFixed(0)}m, tối đa ${maxStartSnapMeters.toStringAsFixed(0)}m)',
+              errorMessage: 'Ponto de partida longe demais de uma via (${snapStart.distanceMeters.toStringAsFixed(0)}m, máximo ${maxStartSnapMeters.toStringAsFixed(0)}m)',
               providerDiagnostics: diagnostics,
             );
           }
@@ -408,7 +408,7 @@ class MapboxDirectionsService {
               provider: primaryProvider,
               latency: stopwatch.elapsed,
               failure: RouteFailureReason.noRoute,
-              errorMessage: 'Điểm đến nằm quá xa đường giao thông (cách ${snapDest.distanceMeters.toStringAsFixed(0)}m, tối đa ${maxSnapMeters.toStringAsFixed(0)}m)',
+              errorMessage: 'Destino longe demais de uma via (${snapDest.distanceMeters.toStringAsFixed(0)}m, máximo ${maxSnapMeters.toStringAsFixed(0)}m)',
               providerDiagnostics: diagnostics,
             );
           }
@@ -475,18 +475,18 @@ class MapboxDirectionsService {
       }
 
       // Format diagnostic-rich user failure message (Item 11)
-      String failureMsg = 'Không tìm thấy lộ trình phù hợp';
+      String failureMsg = 'Nenhuma rota adequada encontrada';
       RouteFailureReason failureReason = RouteFailureReason.noRoute;
 
       if (diagnostics.any((d) => d.errorType == 'rateLimited')) {
         failureReason = RouteFailureReason.providerRejected;
-        failureMsg = 'Dịch vụ định tuyến đang quá tải. Vui lòng thử lại sau giây lát.';
+        failureMsg = 'Serviço de rotas sobrecarregado. Tente de novo em instantes.';
       } else if (diagnostics.any((d) => d.errorType == 'dns' || d.errorType == 'network')) {
         failureReason = RouteFailureReason.noNetwork;
-        failureMsg = 'Không thể kết nối máy chủ định tuyến. Kiểm tra mạng và thử lại.';
+        failureMsg = 'Sem conexão com o serviço de rotas. Verifique a internet e tente de novo.';
       } else if (diagnostics.any((d) => d.errorType == 'noSegment')) {
         failureReason = RouteFailureReason.noRoute;
-        failureMsg = 'Không tìm thấy đường nối giữa vị trí của bạn và điểm đến.';
+        failureMsg = 'Nenhum caminho entre você e o destino.';
       }
 
       return RouteCalculationResult.failed(
@@ -503,7 +503,7 @@ class MapboxDirectionsService {
         provider: primaryProvider,
         latency: stopwatch.elapsed,
         failure: RouteFailureReason.timeout,
-        errorMessage: 'Quá thời gian tính toán lộ trình (${hardDeadline.inSeconds} giây). Kiểm tra mạng và thử lại.',
+        errorMessage: 'O cálculo da rota demorou demais (${hardDeadline.inSeconds} s). Verifique a internet e tente de novo.',
         providerDiagnostics: diagnostics,
       );
     } catch (e) {
@@ -512,7 +512,7 @@ class MapboxDirectionsService {
         provider: primaryProvider,
         latency: stopwatch.elapsed,
         failure: RouteFailureReason.providerRejected,
-        errorMessage: 'Lỗi định tuyến: $e',
+        errorMessage: 'Erro de rota: $e',
         providerDiagnostics: diagnostics,
       );
     }
@@ -612,7 +612,7 @@ class MapboxDirectionsService {
       final legs = routeJson['legs'] as List? ?? [];
       int globalStepIndex = 0;
 
-      String summary = 'Lộ trình ${rIdx + 1}';
+      String summary = 'Rota ${rIdx + 1}';
       if (legs.isNotEmpty) {
         final legSummary = legs[0]['summary'] as String? ?? '';
         if (legSummary.isNotEmpty) summary = legSummary;
@@ -632,7 +632,7 @@ class MapboxDirectionsService {
             final distance = (step['distance'] as num).toDouble();
             final duration = (step['duration'] as num).toDouble();
             final name = (step['name'] as String? ?? '').trim();
-            final streetName = name.isEmpty ? 'Đường không tên' : name;
+            final streetName = name.isEmpty ? 'Rua sem nome' : name;
 
             final instruction =
                 _buildInstruction(manType, manModifier, streetName, maneuver);
@@ -716,48 +716,48 @@ class MapboxDirectionsService {
 
       if (mode == 'bike') {
         if (isFastest) {
-          title = '🏍️ Xe máy - Nhanh nhất';
+          title = '🏍️ Moto - Mais rápida';
           subtitle = r.summary.isNotEmpty
-              ? 'Qua ${r.summary} • Tối ưu xe máy'
-              : 'Lộ trình nhanh nhất tránh đường cấm';
+              ? 'Via ${r.summary} • Ideal para moto'
+              : 'Rota mais rápida';
           themeColor = const Color(0xFF00F0FF);
         } else if (isShortest) {
           final savedKm =
               (primary.totalDistanceMeters - r.totalDistanceMeters) / 1000.0;
-          title = '🏍️ Xe máy - Ngắn nhất';
+          title = '🏍️ Moto - Mais curta';
           subtitle = savedKm > 0.1
-              ? 'Tiết kiệm ${savedKm.toStringAsFixed(1)} km'
-              : (r.summary.isNotEmpty ? 'Qua ${r.summary}' : 'Đường ngắn nhất');
+              ? 'Economiza ${savedKm.toStringAsFixed(1)} km'
+              : (r.summary.isNotEmpty ? 'Qua ${r.summary}' : 'Mais curta');
           themeColor = const Color(0xFF10B981);
         } else {
-          title = '🏍️ Tuyến thay thế ${i + 1}';
+          title = '🏍️ Alternativa ${i + 1}';
           subtitle =
-              r.summary.isNotEmpty ? 'Qua ${r.summary}' : 'Đường thoáng hơn';
+              r.summary.isNotEmpty ? 'Qua ${r.summary}' : 'Via mais livre';
           themeColor = const Color(0xFFF59E0B);
         }
       } else if (mode == 'foot') {
-        title = isFastest ? '🚶 Đi bộ nhanh nhất' : '🚶 Đi bộ thay thế';
-        subtitle = 'Tối ưu vỉa hè và đường ngắn';
+        title = isFastest ? '🚶 A pé - Mais rápida' : '🚶 A pé - Alternativa';
+        subtitle = 'Calçadas e atalhos';
         themeColor = const Color(0xFF38BDF8);
       } else {
         if (isFastest) {
-          title = '🚗 Ô tô - Nhanh nhất';
+          title = '🚗 Carro - Mais rápida';
           subtitle = r.summary.isNotEmpty
               ? 'Qua ${r.summary}'
-              : 'Ưu tiên đường lớn, ít đèn đỏ';
+              : 'Prioriza vias principais, poucos semáforos';
           themeColor = const Color(0xFF00F0FF);
         } else if (isShortest) {
           final savedKm =
               (primary.totalDistanceMeters - r.totalDistanceMeters) / 1000.0;
-          title = '🚗 Ô tô - Ngắn nhất';
+          title = '🚗 Carro - Mais curta';
           subtitle = savedKm > 0.1
-              ? 'Tiết kiệm ${savedKm.toStringAsFixed(1)} km'
-              : 'Cự ly ngắn nhất';
+              ? 'Economiza ${savedKm.toStringAsFixed(1)} km'
+              : 'Menor distância';
           themeColor = const Color(0xFF10B981);
         } else {
-          title = '🚗 Tuyến thay thế ${i + 1}';
+          title = '🚗 Alternativa ${i + 1}';
           subtitle =
-              r.summary.isNotEmpty ? 'Qua ${r.summary}' : 'Đường thoáng';
+              r.summary.isNotEmpty ? 'Qua ${r.summary}' : 'Via livre';
           themeColor = const Color(0xFFF59E0B);
         }
       }
@@ -783,36 +783,36 @@ class MapboxDirectionsService {
 
   String _buildInstruction(
       String type, String? modifier, String street, Map<String, dynamic>? maneuver) {
-    if (type == 'depart') return 'Bắt đầu di chuyển trên $street';
-    if (type == 'arrive') return 'Bạn đã đến điểm đến!';
+    if (type == 'depart') return 'Siga pela $street';
+    if (type == 'arrive') return 'Você chegou ao destino!';
     if (type == 'roundabout' || type == 'rotary') {
       final exit = maneuver?['exit'] as int?;
       if (exit != null && exit > 0) {
-        return 'Vào vòng xuyến, đi theo lối ra thứ $exit vào $street';
+        return 'Na rotatória, pegue a ${exit}ª saída para a $street';
       }
-      return 'Đi vào vòng xuyến, tiếp tục theo $street';
+      return 'Entre na rotatória e siga pela $street';
     }
 
     final mod = modifier?.toLowerCase() ?? '';
     if (type == 'fork') {
       return mod.contains('left')
-          ? 'Đi theo nhánh rẽ bên trái vào $street'
-          : 'Đi theo nhánh rẽ bên phải vào $street';
+          ? 'Pegue a saída à esquerda para a $street'
+          : 'Pegue a saída à direita para a $street';
     }
-    if (type == 'on ramp') return 'Đi vào đường nhánh nhập làn $street';
-    if (type == 'off ramp') return 'Rẽ vào lối ra đường $street';
-    if (type == 'merge') return 'Nhập làn vào đường $street';
+    if (type == 'on ramp') return 'Entre na $street';
+    if (type == 'off ramp') return 'Pegue a saída para a $street';
+    if (type == 'merge') return 'Entre na $street';
 
-    if (mod.contains('sharp right')) return 'Rẽ gắt sang phải vào $street';
-    if (mod.contains('slight right')) return 'Chếch sang phải vào $street';
-    if (mod.contains('right')) return 'Rẽ phải vào $street';
-    if (mod.contains('sharp left')) return 'Rẽ gắt sang trái vào $street';
-    if (mod.contains('slight left')) return 'Chếch sang trái vào $street';
-    if (mod.contains('left')) return 'Rẽ trái vào $street';
+    if (mod.contains('sharp right')) return 'Vire acentuadamente à direita na $street';
+    if (mod.contains('slight right')) return 'Mantenha-se à direita na $street';
+    if (mod.contains('right')) return 'Vire à direita na $street';
+    if (mod.contains('sharp left')) return 'Vire acentuadamente à esquerda na $street';
+    if (mod.contains('slight left')) return 'Mantenha-se à esquerda na $street';
+    if (mod.contains('left')) return 'Vire à esquerda na $street';
     if (mod.contains('uturn') || mod.contains('u-turn')) {
-      return 'Quay đầu xe trên $street';
+      return 'Faça o retorno na $street';
     }
-    return 'Tiếp tục đi thẳng trên $street';
+    return 'Siga em frente na $street';
   }
 
   /// Emergency offline fallback route - strictly tagged synthetic and forbidden from real navigation.
@@ -829,16 +829,16 @@ class MapboxDirectionsService {
     final mid2 = LatLng(dest.latitude, (start.longitude + dest.longitude) / 2);
 
     return NavRoute(
-      title: 'Lộ trình tham khảo (Ngoại tuyến)',
-      subtitle: 'Đường thẳng tham khảo - Không thể dẫn đường',
-      summary: 'Tuyến đường thẳng tham khảo',
+      title: 'Rota de referência (offline)',
+      subtitle: 'Linha reta de referência - sem navegação',
+      summary: 'Linha reta de referência',
       totalDistanceMeters: totalDist,
       totalDurationSeconds: durationSec,
       steps: [
         NavStep(
           stepIndex: 0,
-          instruction: 'Bắt đầu di chuyển về hướng điểm đến',
-          streetName: 'Đường chính',
+          instruction: 'Siga em direção ao destino',
+          streetName: 'Via principal',
           distanceMeters: totalDist * 0.5,
           durationSeconds: durationSec * 0.5,
           coordinate: start,
@@ -846,8 +846,8 @@ class MapboxDirectionsService {
         ),
         NavStep(
           stepIndex: 1,
-          instruction: 'Bạn đã đến điểm đến!',
-          streetName: 'Điểm đến',
+          instruction: 'Você chegou ao destino!',
+          streetName: 'Destino',
           distanceMeters: 0,
           durationSeconds: 0,
           coordinate: dest,

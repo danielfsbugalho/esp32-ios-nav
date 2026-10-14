@@ -66,7 +66,7 @@ class GoogleLinkResolutionController {
     final gen = _state.generation + 1;
     _updateState(GoogleLinkResolutionState(
       status: GoogleLinkResolutionStatus.resolving,
-      statusText: 'Đang mở liên kết Google Maps…',
+      statusText: 'Abrindo link do Google Maps…',
       generation: gen,
     ));
 
@@ -96,7 +96,7 @@ class GoogleLinkResolutionController {
         _updateState(GoogleLinkResolutionState(
           status: GoogleLinkResolutionStatus.failed,
           resolvedLink: resolvedLink,
-          errorMessage: 'Không đọc được vị trí từ liên kết Google Maps',
+          errorMessage: 'Não foi possível ler o local do link do Google Maps',
           generation: gen,
         ));
         return null;
@@ -105,7 +105,7 @@ class GoogleLinkResolutionController {
       if (_state.generation == gen) {
         _updateState(GoogleLinkResolutionState(
           status: GoogleLinkResolutionStatus.timedOut,
-          errorMessage: 'Hết thời gian mở liên kết Google Maps',
+          errorMessage: 'Tempo esgotado ao abrir o link do Google Maps',
           generation: gen,
         ));
       }
@@ -114,7 +114,7 @@ class GoogleLinkResolutionController {
       if (_state.generation == gen) {
         _updateState(GoogleLinkResolutionState(
           status: GoogleLinkResolutionStatus.failed,
-          errorMessage: 'Không đọc được vị trí từ liên kết Google Maps',
+          errorMessage: 'Não foi possível ler o local do link do Google Maps',
           generation: gen,
         ));
       }
@@ -124,7 +124,7 @@ class GoogleLinkResolutionController {
       if (_state.generation == gen && _state.isLoading) {
         _updateState(GoogleLinkResolutionState(
           status: GoogleLinkResolutionStatus.failed,
-          errorMessage: 'Không đọc được vị trí từ liên kết Google Maps',
+          errorMessage: 'Não foi possível ler o local do link do Google Maps',
           generation: gen,
         ));
       }

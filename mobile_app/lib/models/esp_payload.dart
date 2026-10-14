@@ -43,10 +43,10 @@ class EspNavPayload {
   /// Remove Vietnamese diacritics so standard ESP32 display fonts (U8g2 / Adafruit / TFT_eSPI)
   /// can render names cleanly without unprintable character glitches
   static String removeDiacritics(String str) {
-    var withDia = 'àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ'
-                  'ÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐ';
-    var withoutDia = 'aaaaaaaaaaaaaaaaaeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyyd'
-                     'AAAAAAAAAAAAAAAAAEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYYD';
+    var withDia = 'àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđç'
+                  'ÀÁẠẢÃÂẦẤẬẨẪĂẰẮẶẲẴÈÉẸẺẼÊỀẾỆỂỄÌÍỊỈĨÒÓỌỎÕÔỒỐỘỔỖƠỜỚỢỞỠÙÚỤỦŨƯỪỨỰỬỮỲÝỴỶỸĐÇ';
+    var withoutDia = 'aaaaaaaaaaaaaaaaaeeeeeeeeeeeiiiiiooooooooooooooooouuuuuuuuuuuyyyyydc'
+                     'AAAAAAAAAAAAAAAAAEEEEEEEEEEEIIIIIOOOOOOOOOOOOOOOOOUUUUUUUUUUUYYYYYDC';
     for (int i = 0; i < withDia.length; i++) {
       str = str.replaceAll(withDia[i], withoutDia[i]);
     }
@@ -82,9 +82,9 @@ class EspNavPayload {
     if (etaMinutes >= 60) {
       final h = etaMinutes ~/ 60;
       final m = etaMinutes % 60;
-      return m > 0 ? '$h giờ $m phút' : '$h giờ';
+      return m > 0 ? '$h h $m min' : '$h h';
     }
-    return '$etaMinutes phút';
+    return '$etaMinutes min';
   }
 
   String get phoneClock {

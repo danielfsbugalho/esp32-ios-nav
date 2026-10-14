@@ -52,12 +52,12 @@ String effectivePlaceLabel(
     if (saved.isCustomSaved) {
       final nameMatch = saved.name.trim().isNotEmpty &&
           saved.name.toLowerCase() == place.name.toLowerCase() &&
-          saved.name != 'Vị trí Google Maps';
+          saved.name != 'Local do Google Maps';
       final latDiff = (saved.coordinate.latitude - place.coordinate.latitude).abs();
       final lonDiff = (saved.coordinate.longitude - place.coordinate.longitude).abs();
       final coordMatch = (latDiff < 0.0001 && lonDiff < 0.0001) &&
           saved.name.trim().isNotEmpty &&
-          saved.name != 'Vị trí Google Maps';
+          saved.name != 'Local do Google Maps';
       if (nameMatch || coordMatch) {
         return saved.name.trim();
       }
@@ -65,14 +65,14 @@ String effectivePlaceLabel(
   }
 
   // 2. Priority: place.name if non-empty and not generic
-  if (place.name.trim().isNotEmpty && place.name != 'Vị trí Google Maps') {
+  if (place.name.trim().isNotEmpty && place.name != 'Local do Google Maps') {
     return place.name.trim();
   }
 
   // 3. Priority: displayName first segment
   if (place.displayName.trim().isNotEmpty) {
     final firstPart = place.displayName.split(',').first.trim();
-    if (firstPart.isNotEmpty && firstPart != 'Vị trí Google Maps') {
+    if (firstPart.isNotEmpty && firstPart != 'Local do Google Maps') {
       return firstPart;
     }
   }
@@ -82,7 +82,7 @@ String effectivePlaceLabel(
     return place.name.trim();
   }
 
-  return 'Địa điểm đã chọn';
+  return 'Local escolhido';
 }
 
 class MapScreen extends StatefulWidget {
@@ -238,23 +238,23 @@ class _MapScreenState extends State<MapScreen> {
     Color iconColor;
     IconData iconData;
 
-    if (nameLower.contains('nhà') || nameLower.contains('home') || catLower.contains('home')) {
+    if (nameLower.contains('casa') || nameLower.contains('home') || catLower.contains('home')) {
       bgColor = isDark ? const Color(0xFF007AFF).withOpacity(0.30) : const Color(0xFFE5F1FF);
       iconColor = const Color(0xFF007AFF);
       iconData = Icons.home_rounded;
-    } else if (nameLower.contains('công ty') || nameLower.contains('work') || nameLower.contains('office') || catLower.contains('work')) {
+    } else if (nameLower.contains('trabalho') || nameLower.contains('work') || nameLower.contains('office') || catLower.contains('work')) {
       bgColor = isDark ? const Color(0xFF5E5CE6).withOpacity(0.30) : const Color(0xFFEEEEFF);
       iconColor = const Color(0xFF5E5CE6);
       iconData = Icons.work_rounded;
-    } else if (nameLower.contains('ngân hàng') || nameLower.contains('bank') || nameLower.contains('atm') || dispLower.contains('ngân hàng')) {
+    } else if (nameLower.contains('banco') || nameLower.contains('bank') || nameLower.contains('atm') || dispLower.contains('banco')) {
       bgColor = isDark ? const Color(0xFF34C759).withOpacity(0.30) : const Color(0xFFE8F8EE);
       iconColor = const Color(0xFF34C759);
       iconData = Icons.account_balance_rounded;
-    } else if (nameLower.contains('trường') || nameLower.contains('school') || nameLower.contains('university') || dispLower.contains('trường')) {
+    } else if (nameLower.contains('escola') || nameLower.contains('school') || nameLower.contains('university') || dispLower.contains('escola')) {
       bgColor = isDark ? const Color(0xFF32ADE6).withOpacity(0.30) : const Color(0xFFE5F7FF);
       iconColor = const Color(0xFF007AFF);
       iconData = Icons.school_rounded;
-    } else if (nameLower.contains('chợ') || nameLower.contains('siêu thị') || nameLower.contains('mart') || nameLower.contains('shop')) {
+    } else if (nameLower.contains('mercado') || nameLower.contains('supermercado') || nameLower.contains('mart') || nameLower.contains('shop')) {
       bgColor = isDark ? const Color(0xFFFF9500).withOpacity(0.30) : const Color(0xFFFFF4E5);
       iconColor = const Color(0xFFFF9500);
       iconData = Icons.shopping_bag_rounded;
@@ -326,14 +326,14 @@ class _MapScreenState extends State<MapScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogCtx),
-            child: const Text('Hủy'),
+            child: const Text('Cancelar'),
           ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(dialogCtx);
               onConfirm?.call();
             },
-            child: const Text('Xác nhận'),
+            child: const Text('Confirmar'),
           ),
         ],
       ),
@@ -366,7 +366,7 @@ class _MapScreenState extends State<MapScreen> {
   MapPlace? _selectedPlace;
   List<NavRoute> _routes = [];
   int _selectedRouteIndex = 0;
-  String _transportMode = 'bike'; // Default to Motorcycle in Vietnam
+  String _transportMode = 'driving'; // Padrão: carro
   bool _isLoadingRoutes = false;
   int _routeRequestGeneration = 0;
   String? _routeErrorMessage;
@@ -414,11 +414,11 @@ class _MapScreenState extends State<MapScreen> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         duration: const Duration(seconds: 6),
         content: const Text(
-          'Không đọc được vị trí từ liên kết Google Maps',
+          'Não foi possível ler o local do link do Google Maps',
           style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 13),
         ),
         action: SnackBarAction(
-          label: 'Thử lại',
+          label: 'Tentar de novo',
           textColor: const Color(0xFF0A84FF),
           onPressed: () {
             _handleGoogleMapsOrSharedInput(rawUrl);
@@ -828,7 +828,7 @@ class _MapScreenState extends State<MapScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Đã nhận điểm đến từ Google Maps: ${place.name}',
+                    'Destino recebido do Google Maps: ${place.name}',
                     style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -862,7 +862,7 @@ class _MapScreenState extends State<MapScreen> {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Có thể là địa điểm này',
+                  'Pode ser este local',
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
               ),
@@ -873,7 +873,7 @@ class _MapScreenState extends State<MapScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Không thể xác nhận chính xác ghim từ liên kết Google Maps. Hãy kiểm tra vị trí trước khi chỉ đường.',
+                'Não foi possível confirmar o local exato do link do Google Maps. Confira o local antes de iniciar a rota.',
                 style: TextStyle(fontSize: 14, color: Colors.black87),
               ),
               const SizedBox(height: 14),
@@ -898,7 +898,7 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      'Tọa độ: ${candidatePlace.coordinate.latitude.toStringAsFixed(5)}, ${candidatePlace.coordinate.longitude.toStringAsFixed(5)}',
+                      'Coordenadas: ${candidatePlace.coordinate.latitude.toStringAsFixed(5)}, ${candidatePlace.coordinate.longitude.toStringAsFixed(5)}',
                       style: const TextStyle(fontSize: 12, color: Color(0xFF8E8E93)),
                     ),
                   ],
@@ -911,7 +911,7 @@ class _MapScreenState extends State<MapScreen> {
                     Clipboard.setData(ClipboardData(text: link!.debugDiagnostics!));
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text('Đã sao chép chẩn đoán GoogleLink'),
+                        content: Text('Diagnóstico do link copiado'),
                         duration: Duration(seconds: 2),
                       ),
                     );
@@ -928,7 +928,7 @@ class _MapScreenState extends State<MapScreen> {
                         Icon(Icons.copy_rounded, size: 14, color: Color(0xFF007AFF)),
                         SizedBox(width: 6),
                         Text(
-                          'Sao chép chẩn đoán (Debug)',
+                          'Copiar diagnóstico (debug)',
                           style: TextStyle(fontSize: 12, color: Color(0xFF007AFF), fontWeight: FontWeight.w600),
                         ),
                       ],
@@ -941,7 +941,7 @@ class _MapScreenState extends State<MapScreen> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogCtx),
-              child: const Text('Hủy', style: TextStyle(color: Colors.black54)),
+              child: const Text('Cancelar', style: TextStyle(color: Colors.black54)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -953,7 +953,7 @@ class _MapScreenState extends State<MapScreen> {
                 _searchController.text = candidatePlace.name;
                 _onPlaceClicked(candidatePlace);
               },
-              child: const Text('Dùng vị trí này', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+              child: const Text('Usar este local', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             ),
           ],
         );
@@ -1198,35 +1198,35 @@ class _MapScreenState extends State<MapScreen> {
     Color fg;
     switch (precision) {
       case PlacePrecision.exactAddress:
-        label = 'Địa chỉ';
+        label = 'Endereço';
         bg = const Color(0xFFE3F2FD);
         fg = const Color(0xFF1976D2);
         break;
       case PlacePrecision.poi:
       case PlacePrecision.building:
-        label = 'Địa điểm';
+        label = 'Local';
         bg = const Color(0xFFE8F5E9);
         fg = const Color(0xFF388E3C);
         break;
       case PlacePrecision.street:
-        label = 'Đường';
+        label = 'Rua';
         bg = const Color(0xFFFFF3E0);
         fg = const Color(0xFFF57C00);
         break;
       case PlacePrecision.neighborhood:
       case PlacePrecision.district:
       case PlacePrecision.city:
-        label = 'Khu vực';
+        label = 'Região';
         bg = const Color(0xFFF3E5F5);
         fg = const Color(0xFF7B1FA2);
         break;
       case PlacePrecision.approximate:
-        label = 'Ước lượng';
+        label = 'Aproximado';
         bg = const Color(0xFFFFF8E1);
         fg = const Color(0xFFFFA000);
         break;
       case PlacePrecision.coordinate:
-        label = 'Tọa độ';
+        label = 'Coordenadas';
         bg = const Color(0xFFECEFF1);
         fg = const Color(0xFF455A64);
         break;
@@ -1323,7 +1323,7 @@ class _MapScreenState extends State<MapScreen> {
           _viewMode = 2;
           _routes = [];
           _isLoadingRoutes = false;
-          _routeErrorMessage = 'Tọa độ vị trí không hợp lệ.';
+          _routeErrorMessage = 'Coordenadas inválidas.';
           _routeTelemetryStatus = 'failed';
         });
         _updateDestinationMarker();
@@ -1407,7 +1407,7 @@ class _MapScreenState extends State<MapScreen> {
           _telemetryRoutesCommitted = 0;
           _telemetryPreviewRetained = false;
           _routeTelemetryStatus = result.failure == RouteFailureReason.timeout ? 'timeout' : 'failed';
-          _routeErrorMessage = result.errorMessage ?? 'Không thể tính lộ trình. Kiểm tra kết nối mạng và thử lại.';
+          _routeErrorMessage = result.errorMessage ?? 'Não foi possível calcular a rota. Verifique a internet e tente de novo.';
         }
       });
 
@@ -1427,7 +1427,7 @@ class _MapScreenState extends State<MapScreen> {
         setState(() {
           _routes = [];
           _routeTelemetryStatus = 'failed';
-          _routeErrorMessage = 'Không thể tính lộ trình. Kiểm tra kết nối mạng và thử lại.';
+          _routeErrorMessage = 'Não foi possível calcular a rota. Verifique a internet e tente de novo.';
         });
         _updateRouteOnMap();
       }
@@ -1474,7 +1474,7 @@ class _MapScreenState extends State<MapScreen> {
       debugPrint('[MapScreen] Blocked start navigation: synthetic route is not allowed.');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Lộ trình này chỉ dùng để tham khảo ngoại tuyến, không thể dẫn đường thực tế.'),
+          content: Text('Esta rota é só uma referência offline, não serve para navegar.'),
           duration: Duration(seconds: 3),
         ),
       );
@@ -1587,32 +1587,32 @@ class _MapScreenState extends State<MapScreen> {
             ),
             const SizedBox(height: 16),
             const Text(
-              'Báo cáo sự cố',
+              'Relatar ocorrência',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF1C1C1E)),
             ),
             const SizedBox(height: 16),
             ListTile(
               leading: const Icon(Icons.warning_amber_rounded, color: Color(0xFFFF9500), size: 28),
-              title: const Text('Nguy hiểm trên đường', style: TextStyle(fontWeight: FontWeight.w600)),
+              title: const Text('Perigo na via', style: TextStyle(fontWeight: FontWeight.w600)),
               onTap: () {
                 Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Đã ghi nhận báo cáo nguy hiểm')));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Perigo registrado')));
               },
             ),
             ListTile(
               leading: const Icon(Icons.car_crash_rounded, color: Color(0xFFFF3B30), size: 28),
-              title: const Text('Tai nạn giao thông', style: TextStyle(fontWeight: FontWeight.w600)),
+              title: const Text('Acidente', style: TextStyle(fontWeight: FontWeight.w600)),
               onTap: () {
                 Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Đã ghi nhận báo cáo tai nạn')));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Acidente registrado')));
               },
             ),
             ListTile(
               leading: const Icon(Icons.speed_rounded, color: Color(0xFF007AFF), size: 28),
-              title: const Text('Điểm bắn tốc độ', style: TextStyle(fontWeight: FontWeight.w600)),
+              title: const Text('Radar', style: TextStyle(fontWeight: FontWeight.w600)),
               onTap: () {
                 Navigator.pop(ctx);
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Đã ghi nhận điểm tốc độ')));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Radar registrado')));
               },
             ),
           ],
@@ -1723,7 +1723,7 @@ class _MapScreenState extends State<MapScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(top: bleService.isConnected ? 44.0 : 8.0),
                   child: const StatusBadge(
-                    text: 'Đang định vị...',
+                    text: 'Localizando...',
                     icon: Icons.my_location_rounded,
                     color: AppColors.primary,
                   ),
@@ -1737,7 +1737,7 @@ class _MapScreenState extends State<MapScreen> {
                 child: Padding(
                   padding: EdgeInsets.only(top: bleService.isConnected ? 44.0 : 8.0),
                   child: StatusBadge(
-                    text: 'Chạm để tìm vị trí',
+                    text: 'Toque para localizar',
                     icon: Icons.location_searching_rounded,
                     color: AppColors.warning,
                     onTap: _recenterToUser,
@@ -1783,7 +1783,7 @@ class _MapScreenState extends State<MapScreen> {
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                     icon: const Icon(Icons.alt_route_rounded, color: Colors.black87, size: 22),
-                    tooltip: 'Toàn cảnh lộ trình',
+                    tooltip: 'Visão geral da rota',
                     onPressed: _fitCameraToCurrentRoute,
                   ),
                   const AppGlassToolbarDivider(),
@@ -1791,7 +1791,7 @@ class _MapScreenState extends State<MapScreen> {
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                     icon: Icon(_isMuted ? Icons.volume_off_rounded : Icons.volume_up_rounded, color: Colors.black87, size: 22),
-                    tooltip: _isMuted ? 'Bật âm thanh' : 'Tắt âm thanh',
+                    tooltip: _isMuted ? 'Ativar som' : 'Desativar som',
                     onPressed: () {
                       final voice = VoiceGuidanceService();
                       voice.toggleMute();
@@ -1803,7 +1803,7 @@ class _MapScreenState extends State<MapScreen> {
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
                     icon: const Icon(Icons.chat_bubble_outline_rounded, color: Colors.black87, size: 22),
-                    tooltip: 'Báo cáo sự cố',
+                    tooltip: 'Relatar ocorrência',
                     onPressed: _showReportIncidentDialog,
                   ),
                 ],
@@ -1840,7 +1840,7 @@ class _MapScreenState extends State<MapScreen> {
                     const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        _googleLinkStatusText ?? 'Đang mở liên kết Google Maps…',
+                        _googleLinkStatusText ?? 'Abrindo link do Google Maps…',
                         style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.black87),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -1849,7 +1849,7 @@ class _MapScreenState extends State<MapScreen> {
                       onTap: _cancelGoogleLinkResolution,
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        child: const Text('Hủy', style: TextStyle(color: Color(0xFFFF3B30), fontWeight: FontWeight.bold, fontSize: 13)),
+                        child: const Text('Cancelar', style: TextStyle(color: Color(0xFFFF3B30), fontWeight: FontWeight.bold, fontSize: 13)),
                       ),
                     ),
                   ],
@@ -1893,7 +1893,7 @@ class _MapScreenState extends State<MapScreen> {
                         Icon(Icons.center_focus_strong_rounded, color: Colors.white, size: 18),
                         SizedBox(width: 8),
                         Text(
-                          'Khóa tâm về vị trí xe',
+                          'Centralizar no carro',
                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13),
                         ),
                       ],
@@ -1963,7 +1963,7 @@ class _MapScreenState extends State<MapScreen> {
             color: _isMapThemePickerOpen ? const Color(0xFF007AFF) : const Color(0xFF1C1C1E),
             size: 22,
           ),
-          tooltip: 'Bản đồ',
+          tooltip: 'Mapa',
           onPressed: _showMapThemePicker,
         ),
         Container(width: 26, height: 0.5, color: Colors.black.withOpacity(0.08)),
@@ -1985,7 +1985,7 @@ class _MapScreenState extends State<MapScreen> {
               color: _isAutoCentering ? const Color(0xFF007AFF) : const Color(0xFF1C1C1E),
               size: 22,
             ),
-            tooltip: 'Điều hướng',
+            tooltip: 'Navegação',
             onPressed: () {
               if (isDriving) {
                 _recenterToVehicle();
@@ -2231,7 +2231,7 @@ class _MapScreenState extends State<MapScreen> {
               const SizedBox(height: 16),
               ListTile(
                 leading: const Icon(Icons.directions_rounded, color: Color(0xFF007AFF)),
-                title: const Text('Chỉ đường đến đây'),
+                title: const Text('Traçar rota até aqui'),
                 onTap: () {
                   Navigator.pop(ctx);
                   Navigator.pop(context);
@@ -2240,7 +2240,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.star_outline_rounded, color: Color(0xFFFF9500)),
-                title: const Text('Lưu vào Mục ưa thích'),
+                title: const Text('Salvar nos favoritos'),
                 onTap: () async {
                   Navigator.pop(ctx);
                   await _searchService.savePlace(place);
@@ -2250,7 +2250,7 @@ class _MapScreenState extends State<MapScreen> {
               ),
               ListTile(
                 leading: const Icon(Icons.delete_outline_rounded, color: Color(0xFFFF3B30)),
-                title: const Text('Xóa khỏi lịch sử tìm kiếm', style: TextStyle(color: Color(0xFFFF3B30))),
+                title: const Text('Remover do histórico', style: TextStyle(color: Color(0xFFFF3B30))),
                 onTap: () async {
                   Navigator.pop(ctx);
                   await _searchService.deleteRecentSearch(place);
@@ -2295,7 +2295,7 @@ class _MapScreenState extends State<MapScreen> {
             color: Colors.black87,
             size: 20,
           ),
-          tooltip: 'Chế độ phương tiện',
+          tooltip: 'Tipo de veículo',
           onPressed: () {
             setState(() {
               _transportMode = _transportMode == 'bike' ? 'driving' : 'bike';
@@ -2310,7 +2310,7 @@ class _MapScreenState extends State<MapScreen> {
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
           icon: const Icon(Icons.navigation_rounded, color: Color(0xFF007AFF), size: 22),
-          tooltip: 'Vị trí hiện tại',
+          tooltip: 'Local atual',
           onPressed: () {
             if (isDriving) {
               _recenterToVehicle();
@@ -2345,7 +2345,7 @@ class _MapScreenState extends State<MapScreen> {
                   const SizedBox(width: 10),
                   const Expanded(
                     child: Text(
-                      'Tìm kiếm điểm đến...',
+                      'Buscar destino...',
                       style: TextStyle(
                         color: Color(0xFF8E8E93),
                         fontSize: 16,
@@ -2473,7 +2473,7 @@ class _MapScreenState extends State<MapScreen> {
                                               fontWeight: FontWeight.w500,
                                             ),
                                             decoration: InputDecoration(
-                                              hintText: 'Bản Đồ Apple',
+                                              hintText: 'Apple Maps',
                                               hintStyle: TextStyle(
                                                 color: isDark ? Colors.white38 : Colors.black38,
                                                 fontSize: 16,
@@ -2565,7 +2565,7 @@ class _MapScreenState extends State<MapScreen> {
                                     const SizedBox(width: 10),
                                     Expanded(
                                       child: Text(
-                                        _googleLinkStatusText ?? 'Đang mở liên kết Google Maps…',
+                                        _googleLinkStatusText ?? 'Abrindo link do Google Maps…',
                                         style: const TextStyle(fontSize: 12, color: Color(0xFF007AFF), fontWeight: FontWeight.w600),
                                         overflow: TextOverflow.ellipsis,
                                       ),
@@ -2574,7 +2574,7 @@ class _MapScreenState extends State<MapScreen> {
                                       onTap: _cancelGoogleLinkResolution,
                                       child: const Padding(
                                         padding: EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                                        child: Text('Hủy', style: TextStyle(color: Color(0xFFFF3B30), fontWeight: FontWeight.bold, fontSize: 13)),
+                                        child: Text('Cancelar', style: TextStyle(color: Color(0xFFFF3B30), fontWeight: FontWeight.bold, fontSize: 13)),
                                       ),
                                     ),
                                   ],
@@ -2690,7 +2690,7 @@ class _MapScreenState extends State<MapScreen> {
                                               const SizedBox(width: 10),
                                               const Expanded(
                                                 child: Text(
-                                                  'Dán liên kết Google Maps hoặc Tọa độ',
+                                                  'Cole um link do Google Maps ou coordenadas',
                                                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Color(0xFF007AFF)),
                                                 ),
                                               ),
@@ -2709,7 +2709,7 @@ class _MapScreenState extends State<MapScreen> {
                                         child: Row(
                                           children: [
                                             Text(
-                                              'Địa điểm',
+                                              'Local',
                                               style: TextStyle(
                                                 fontSize: 20,
                                                 fontWeight: FontWeight.bold,
@@ -2732,17 +2732,17 @@ class _MapScreenState extends State<MapScreen> {
                                           // 1. Nhà (Home)
                                           _buildQuickPlaceCircleAction(
                                             icon: Icons.home_rounded,
-                                            label: 'Nhà',
-                                            subtitle: 'Thêm',
+                                            label: 'Casa',
+                                            subtitle: 'Adicionar',
                                             isDark: isDark,
                                             onTap: () {
-                                              final home = _searchService.savedPlaces.where((p) => p.name.toLowerCase().contains('nhà') || p.name.toLowerCase().contains('home')).firstOrNull;
+                                              final home = _searchService.savedPlaces.where((p) => p.name.toLowerCase().contains('casa') || p.name.toLowerCase().contains('home')).firstOrNull;
                                               if (home != null) {
                                                 Navigator.pop(modalCtx);
                                                 _calculateRoutesForPlace(home);
                                               } else {
-                                                _searchController.text = 'Nhà ';
-                                                _onSearchChanged('Nhà ');
+                                                _searchController.text = 'Casa ';
+                                                _onSearchChanged('Casa ');
                                                 setModalState(() {});
                                               }
                                             },
@@ -2751,17 +2751,17 @@ class _MapScreenState extends State<MapScreen> {
                                           // 2. Công ty (Work)
                                           _buildQuickPlaceCircleAction(
                                             icon: Icons.work_rounded,
-                                            label: 'Công ty',
-                                            subtitle: 'Thêm',
+                                            label: 'Trabalho',
+                                            subtitle: 'Adicionar',
                                             isDark: isDark,
                                             onTap: () {
-                                              final work = _searchService.savedPlaces.where((p) => p.name.toLowerCase().contains('công ty') || p.name.toLowerCase().contains('work')).firstOrNull;
+                                              final work = _searchService.savedPlaces.where((p) => p.name.toLowerCase().contains('trabalho') || p.name.toLowerCase().contains('work')).firstOrNull;
                                               if (work != null) {
                                                 Navigator.pop(modalCtx);
                                                 _calculateRoutesForPlace(work);
                                               } else {
-                                                _searchController.text = 'Công ty ';
-                                                _onSearchChanged('Công ty ');
+                                                _searchController.text = 'Trabalho ';
+                                                _onSearchChanged('Trabalho ');
                                                 setModalState(() {});
                                               }
                                             },
@@ -2770,7 +2770,7 @@ class _MapScreenState extends State<MapScreen> {
                                           // 3. Thêm (Add)
                                           _buildQuickPlaceCircleAction(
                                             icon: Icons.add_rounded,
-                                            label: 'Thêm',
+                                            label: 'Adicionar',
                                             subtitle: null,
                                             isAddButton: true,
                                             isDark: isDark,
@@ -2802,7 +2802,7 @@ class _MapScreenState extends State<MapScreen> {
                                           Row(
                                             children: [
                                               Text(
-                                                'Gần đây',
+                                                'Recentes',
                                                 style: TextStyle(
                                                   fontSize: 20,
                                                   fontWeight: FontWeight.bold,
@@ -2826,7 +2826,7 @@ class _MapScreenState extends State<MapScreen> {
                                                 setState(() {});
                                               },
                                               child: const Text(
-                                                'Xóa tất cả',
+                                                'Limpar tudo',
                                                 style: TextStyle(
                                                   color: Color(0xFF007AFF),
                                                   fontSize: 14,
@@ -2859,7 +2859,7 @@ class _MapScreenState extends State<MapScreen> {
                                                   Padding(
                                                     padding: const EdgeInsets.all(16.0),
                                                     child: Text(
-                                                      'Chưa có lịch sử tìm kiếm',
+                                                      'Nenhuma busca recente',
                                                       style: TextStyle(
                                                         color: isDark ? Colors.white38 : Colors.black38,
                                                         fontSize: 14,
@@ -2900,7 +2900,7 @@ class _MapScreenState extends State<MapScreen> {
                                                             color: isDark ? Colors.white60 : Colors.black54,
                                                             size: 22,
                                                           ),
-                                                          tooltip: 'Tùy chọn',
+                                                          tooltip: 'Opções',
                                                           onPressed: () => _showRecentPlaceActionSheet(context, p, setModalState),
                                                         ),
                                                         onTap: () {
@@ -2926,7 +2926,7 @@ class _MapScreenState extends State<MapScreen> {
                                       Row(
                                         children: [
                                           Text(
-                                            'Hướng dẫn của bạn',
+                                            'Seus guias',
                                             style: TextStyle(
                                               fontSize: 20,
                                               fontWeight: FontWeight.bold,
@@ -2983,7 +2983,7 @@ class _MapScreenState extends State<MapScreen> {
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                      'Mục ưa thích',
+                                                      'Favoritos',
                                                       style: TextStyle(
                                                         fontWeight: FontWeight.bold,
                                                         fontSize: 14,
@@ -2992,7 +2992,7 @@ class _MapScreenState extends State<MapScreen> {
                                                     ),
                                                     const SizedBox(height: 2),
                                                     Text(
-                                                      '${_searchService.savedPlaces.length} địa điểm',
+                                                      '${_searchService.savedPlaces.length} locais',
                                                       style: TextStyle(
                                                         fontSize: 12,
                                                         color: isDark ? Colors.white60 : Colors.black45,
@@ -3081,7 +3081,7 @@ class _MapScreenState extends State<MapScreen> {
                     onPressed: () {
                       Clipboard.setData(ClipboardData(text: '${place.name}\n${place.coordinate.latitude}, ${place.coordinate.longitude}'));
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Đã sao chép thông tin địa điểm')),
+                        const SnackBar(content: Text('Dados do local copiados')),
                       );
                     },
                   ),
@@ -3103,7 +3103,7 @@ class _MapScreenState extends State<MapScreen> {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          place.displayName.isNotEmpty ? place.displayName : 'Cửa hàng',
+                          place.displayName.isNotEmpty ? place.displayName : 'Loja',
                           style: const TextStyle(fontSize: 13, color: Colors.black54),
                           textAlign: TextAlign.center,
                           maxLines: 1,
@@ -3154,7 +3154,7 @@ class _MapScreenState extends State<MapScreen> {
                           ),
                           icon: const Icon(Icons.directions_car_rounded, size: 20),
                           label: const Text(
-                            'Chỉ đường',
+                            'Rota',
                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                           ),
                           onPressed: () => _calculateRoutesForPlace(place),
@@ -3174,7 +3174,7 @@ class _MapScreenState extends State<MapScreen> {
                           ),
                           icon: Icon(isSaved ? Icons.bookmark_rounded : Icons.bookmark_border_rounded, size: 20),
                           label: Text(
-                            isSaved ? 'Đã lưu' : 'Lưu',
+                            isSaved ? 'Salvo' : 'Salvar',
                             style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                           ),
                           onPressed: () async {
@@ -3202,7 +3202,7 @@ class _MapScreenState extends State<MapScreen> {
                                     children: [
                                       ListTile(
                                         leading: const Icon(Icons.edit_rounded, color: AppColors.primary),
-                                        title: const Text('Đổi tên địa điểm', style: AppTypography.headline),
+                                        title: const Text('Renomear local', style: AppTypography.headline),
                                         onTap: () {
                                           Navigator.pop(ctx);
                                           SavedPlaceDialog.show(
@@ -3218,7 +3218,7 @@ class _MapScreenState extends State<MapScreen> {
                                       ),
                                       ListTile(
                                         leading: const Icon(Icons.delete_outline_rounded, color: AppColors.danger),
-                                        title: const Text('Xóa khỏi danh sách đã lưu', style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w600)),
+                                        title: const Text('Remover dos salvos', style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w600)),
                                         onTap: () async {
                                           Navigator.pop(ctx);
                                           await _searchService.removeSavedPlace(place);
@@ -3241,7 +3241,7 @@ class _MapScreenState extends State<MapScreen> {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         duration: const Duration(seconds: 1),
-                                        content: Text('Đã lưu  thành công'),
+                                        content: Text('Salvo com sucesso'),
                                       ),
                                     );
                                   }
@@ -3260,14 +3260,14 @@ class _MapScreenState extends State<MapScreen> {
                         ),
                         child: IconButton(
                           icon: const Icon(Icons.copy_rounded, color: Color(0xFF007AFF), size: 20),
-                          tooltip: 'Sao chép tọa độ GPS',
+                          tooltip: 'Copiar coordenadas GPS',
                           padding: const EdgeInsets.all(14),
                           onPressed: () {
                             Clipboard.setData(ClipboardData(
                               text: '${place.coordinate.latitude.toStringAsFixed(6)}, ${place.coordinate.longitude.toStringAsFixed(6)}',
                             ));
                             ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Đã sao chép tọa độ GPS vào bộ nhớ tạm')),
+                              const SnackBar(content: Text('Coordenadas GPS copiadas')),
                             );
                           },
                         ),
@@ -3289,12 +3289,12 @@ class _MapScreenState extends State<MapScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Xếp hạng & Chi tiết', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black87)),
+                    const Text('Avaliação e detalhes', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.black87)),
                     const SizedBox(height: 6),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text('Tọa độ GPS:', style: TextStyle(fontSize: 12, color: Colors.black54)),
+                        const Text('Coordenadas GPS:', style: TextStyle(fontSize: 12, color: Colors.black54)),
                         Text(
                           '${place.coordinate.latitude.toStringAsFixed(5)}, ${place.coordinate.longitude.toStringAsFixed(5)}',
                           style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.black87),
@@ -3305,8 +3305,8 @@ class _MapScreenState extends State<MapScreen> {
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Dịch vụ:', style: TextStyle(fontSize: 12, color: Colors.black54)),
-                        Text('Hoạt động bình thường', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF34C759))),
+                        Text('Serviço:', style: TextStyle(fontSize: 12, color: Colors.black54)),
+                        Text('Funcionando normalmente', style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Color(0xFF34C759))),
                       ],
                     ),
                   ],
@@ -3398,7 +3398,7 @@ class _MapScreenState extends State<MapScreen> {
                   Column(
                     children: [
                       Text(
-                        'Chỉ đường',
+                        'Rota',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -3414,7 +3414,7 @@ class _MapScreenState extends State<MapScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Text(
-                          'Tùy chọn',
+                          'Opções',
                           style: TextStyle(color: Color(0xFF007AFF), fontSize: 11, fontWeight: FontWeight.bold),
                         ),
                       ),
@@ -3490,7 +3490,7 @@ class _MapScreenState extends State<MapScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'Vị trí của tôi',
+                            'Meu local',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
@@ -3514,7 +3514,7 @@ class _MapScreenState extends State<MapScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            _selectedPlace?.name ?? 'Điểm đến',
+                            _selectedPlace?.name ?? 'Destino',
                             style: TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
@@ -3545,7 +3545,7 @@ class _MapScreenState extends State<MapScreen> {
                         const SizedBox(width: 12),
                         const Expanded(
                           child: Text(
-                            'Điểm dừng',
+                            'Parada',
                             style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: Color(0xFF007AFF)),
                           ),
                         ),
@@ -3628,7 +3628,7 @@ class _MapScreenState extends State<MapScreen> {
                               ),
                               const SizedBox(height: 2),
                               Text(
-                                idx == 0 ? 'Đề xuất' : 'Tuyến ${idx + 1}',
+                                idx == 0 ? 'Sugerida' : 'Rota ${idx + 1}',
                                 style: TextStyle(
                                   color: isSelected ? Colors.white.withOpacity(0.9) : const Color(0xFF34C759),
                                   fontSize: 11,
@@ -3668,7 +3668,7 @@ class _MapScreenState extends State<MapScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Đang tìm lộ trình tối ưu...',
+                              'Procurando a melhor rota...',
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w600,
@@ -3677,8 +3677,8 @@ class _MapScreenState extends State<MapScreen> {
                             ),
                             Text(
                               _transportMode == 'bike'
-                                  ? 'Đang tính toán tuyến xe máy (Valhalla)...'
-                                  : 'Đang kết nối dịch vụ định tuyến...',
+                                  ? 'Calculando rota (Valhalla)...'
+                                  : 'Conectando ao serviço de rotas...',
                               style: TextStyle(
                                 fontSize: 12,
                                 color: isDark ? Colors.white60 : Colors.black54,
@@ -3708,7 +3708,7 @@ class _MapScreenState extends State<MapScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const Text(
-                              'Không thể tính lộ trình',
+                              'Não foi possível calcular a rota',
                               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Color(0xFFFF3B30)),
                             ),
                             Text(
@@ -3737,7 +3737,7 @@ class _MapScreenState extends State<MapScreen> {
                             borderRadius: BorderRadius.circular(14),
                           ),
                           child: const Text(
-                            'Thử lại',
+                            'Tentar de novo',
                             style: TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600),
                           ),
                         ),
@@ -3770,7 +3770,7 @@ class _MapScreenState extends State<MapScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                _isLoadingRoutes ? 'Đang tính...' : durationStr,
+                                _isLoadingRoutes ? 'Calculando...' : durationStr,
                                 style: TextStyle(
                                   fontSize: 22,
                                   fontWeight: FontWeight.bold,
@@ -3783,14 +3783,14 @@ class _MapScreenState extends State<MapScreen> {
                               const SizedBox(height: 2),
                               Text(
                                 _isLoadingRoutes
-                                    ? 'Đang tìm lộ trình nhanh nhất'
+                                    ? 'Procurando a rota mais rápida'
                                     : (selectedRoute != null
                                         ? (selectedRoute.isFallbackSynthetic
-                                            ? 'Lộ trình tham khảo (Ngoại tuyến)'
-                                            : 'Giờ đến: $arrivalStr · $distanceStr')
+                                            ? 'Rota de referência (offline)'
+                                            : 'Chegada: $arrivalStr · $distanceStr')
                                         : (_routeErrorMessage != null
-                                            ? 'Kiểm tra mạng và thử lại'
-                                            : 'Không có lộ trình')),
+                                            ? 'Verifique a internet e tente de novo'
+                                            : 'Nenhuma rota')),
                                 style: TextStyle(
                                   fontSize: 13,
                                   color: isDark ? Colors.white60 : Colors.black54,
@@ -3799,8 +3799,8 @@ class _MapScreenState extends State<MapScreen> {
                               if (canStartNav)
                                 Text(
                                   _selectedRouteIndex == 0
-                                      ? 'Đề xuất'
-                                      : 'Lộ trình thay thế ${_selectedRouteIndex + 1}',
+                                      ? 'Sugerida'
+                                      : 'Rota alternativa ${_selectedRouteIndex + 1}',
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
@@ -3855,7 +3855,7 @@ class _MapScreenState extends State<MapScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                'ĐI',
+                                'IR',
                                 style: TextStyle(
                                   color: canStartNav ? Colors.white : Colors.black26,
                                   fontSize: 24,
@@ -4007,7 +4007,7 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Widget _buildAppleFloatingStreetPill(NavigationManager navManager) {
-    final street = navManager.currentStep?.streetName ?? 'Lộ trình hiện tại';
+    final street = navManager.currentStep?.streetName ?? 'Rota atual';
     return AppGlassPill(
       height: 32,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
@@ -4071,7 +4071,7 @@ class _MapScreenState extends State<MapScreen> {
     final hours = etaMins ~/ 60;
     final remMins = etaMins % 60;
     final durationStr = hours > 0 ? '$hours:${remMins.toString().padLeft(2, '0')}' : '$remMins';
-    final durationUnit = hours > 0 ? 'giờ' : 'phút';
+    final durationUnit = hours > 0 ? 'h' : 'min';
     final totalMeters = navManager.remainingTotalDistance.round();
     final distanceStr = totalMeters >= 1000
         ? (totalMeters >= 10000 ? (totalMeters / 1000).toStringAsFixed(0) : (totalMeters / 1000).toStringAsFixed(1))
@@ -4086,7 +4086,7 @@ class _MapScreenState extends State<MapScreen> {
         Padding(
           padding: const EdgeInsets.only(right: 20, bottom: 10),
           child: Tooltip(
-            message: 'Thu/Phóng lộ trình',
+            message: 'Ajustar zoom da rota',
             child: AppGlassButton(
               size: 44,
               variant: AppGlassVariant.regular,
@@ -4125,7 +4125,7 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                     const SizedBox(height: 2),
                     const Text(
-                      'đến',
+                      'chegada',
                       style: TextStyle(
                         fontSize: 12,
                         color: Color(0xFF8E8E93),
@@ -4195,7 +4195,7 @@ class _MapScreenState extends State<MapScreen> {
                 variant: AppGlassVariant.danger,
                 size: 44,
                 icon: const Icon(Icons.close_rounded, color: Colors.white, size: 22),
-                tooltip: 'Kết thúc dẫn đường',
+                tooltip: 'Encerrar navegação',
                 onTap: () async {
                   _routeRenderCadenceTimer?.cancel();
                   _cameraCadenceTimer?.cancel();
@@ -4298,7 +4298,7 @@ class _MapScreenState extends State<MapScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            'Chế độ bản đồ',
+                            'Tipo de mapa',
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -4336,7 +4336,7 @@ class _MapScreenState extends State<MapScreen> {
                       Row(
                         children: [
                           _buildMapStyleCard(
-                            title: 'Khám phá',
+                            title: 'Explorar',
                             mode: MapThemeMode.streets,
                             icon: Icons.map_rounded,
                             setSheetState: setSheetState,
@@ -4344,7 +4344,7 @@ class _MapScreenState extends State<MapScreen> {
                           ),
                           const SizedBox(width: 8),
                           _buildMapStyleCard(
-                            title: 'Lái xe',
+                            title: 'Dirigir',
                             mode: MapThemeMode.driving,
                             icon: Icons.directions_car_rounded,
                             setSheetState: setSheetState,
@@ -4352,7 +4352,7 @@ class _MapScreenState extends State<MapScreen> {
                           ),
                           const SizedBox(width: 8),
                           _buildMapStyleCard(
-                            title: 'PT công cộng',
+                            title: 'Transporte público',
                             mode: MapThemeMode.transit,
                             icon: Icons.directions_transit_rounded,
                             setSheetState: setSheetState,
@@ -4360,7 +4360,7 @@ class _MapScreenState extends State<MapScreen> {
                           ),
                           const SizedBox(width: 8),
                           _buildMapStyleCard(
-                            title: 'Vệ tinh',
+                            title: 'Satélite',
                             mode: MapThemeMode.satellite,
                             icon: Icons.satellite_alt_rounded,
                             setSheetState: setSheetState,

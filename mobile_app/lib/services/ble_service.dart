@@ -268,7 +268,7 @@ class BleService extends ChangeNotifier {
             pName.isEmpty; // iOS sometimes hides name until connected
 
         if (isEsp) {
-          final name = pName.isNotEmpty ? pName : 'ysiducw (Đã kết nối iOS)';
+          final name = pName.isNotEmpty ? pName : 'ESP32 Nav (pareado no iPhone)';
           _systemBondedDevice = d;
           matched.add(d);
 
@@ -345,7 +345,7 @@ class BleService extends ChangeNotifier {
         for (final r in results) {
           final name = r.advertisementData.advName.isNotEmpty
               ? r.advertisementData.advName
-              : (r.device.platformName.isNotEmpty ? r.device.platformName : 'Thiết bị BLE (${r.device.remoteId.str.substring(0, 5)})');
+              : (r.device.platformName.isNotEmpty ? r.device.platformName : 'Aparelho Bluetooth (${r.device.remoteId.str.substring(0, 5)})');
 
           final index = _discoveredDevices.indexWhere((item) => item.device.remoteId == r.device.remoteId);
           if (index >= 0) {

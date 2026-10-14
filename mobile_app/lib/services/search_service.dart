@@ -166,7 +166,7 @@ class SearchService {
             props['name'] as String? ??
             f['place_name'] as String? ??
             props['full_address'] as String? ??
-            'Địa điểm';
+            'Local';
         final placeName = f['place_name'] as String? ??
             props['full_address'] as String? ??
             props['place_formatted'] as String? ??
@@ -211,7 +211,7 @@ class SearchService {
     try {
       final apiKey = MapboxConfig.maptilerApiKey;
       final url =
-          'https://api.maptiler.com/geocoding/${location.longitude},${location.latitude}.json?key=$apiKey&language=vi';
+          'https://api.maptiler.com/geocoding/${location.longitude},${location.latitude}.json?key=$apiKey&language=pt';
       final response = await http
           .get(Uri.parse(url))
           .timeout(timeout);
@@ -223,7 +223,7 @@ class SearchService {
 
       final f = features.first as Map<String, dynamic>;
       final placeName = f['place_name'] as String? ?? '';
-      final text = f['text'] as String? ?? (placeName.isNotEmpty ? placeName.split(',').first.trim() : 'Vị trí đã ghim');
+      final text = f['text'] as String? ?? (placeName.isNotEmpty ? placeName.split(',').first.trim() : 'Local marcado');
 
       if (placeName.isNotEmpty) {
         return MapPlace(
@@ -707,20 +707,7 @@ class SearchService {
   // =========================================================================
   // PERSISTENT SEARCH HISTORY & SAVED PLACES (FAVORITES)
   // =========================================================================
-  static final List<MapPlace> _recentSearches = [
-    MapPlace(
-      name: 'Hồ Hoàn Kiếm',
-      displayName: 'Hồ Hoàn Kiếm, Quận Hoàn Kiếm, Hà Nội',
-      coordinate: const LatLng(21.0285, 105.8542),
-      type: 'water',
-    ),
-    MapPlace(
-      name: 'Chợ Bến Thành',
-      displayName: 'Chợ Bến Thành, Quận 1, TP. Hồ Chí Minh',
-      coordinate: const LatLng(10.7725, 106.6980),
-      type: 'marketplace',
-    ),
-  ];
+  static final List<MapPlace> _recentSearches = [];
   static final List<MapPlace> _savedPlaces = [];
   static bool _isLoaded = false;
 
@@ -923,7 +910,7 @@ class SearchService {
     final results = <MapPlace>[];
     final seen = <String>{};
 
-    for (final landmark in _vietnameseLandmarks) {
+    for (final landmark in <MapPlace>[]) {
       final lName = landmark.name.toLowerCase();
       final lNameUnaccented = removeDiacritics(landmark.name).toLowerCase();
       final lDisplayUnaccented = removeDiacritics(landmark.displayName).toLowerCase();
@@ -1008,8 +995,8 @@ class SearchService {
     if (intent.type == SearchQueryIntentType.coordinate && intent.targetCoordinate != null) {
       final point = intent.targetCoordinate!;
       final immediatePlace = MapPlace(
-        name: 'Tọa độ: ${point.latitude.toStringAsFixed(6)}, ${point.longitude.toStringAsFixed(6)}',
-        displayName: 'Tọa độ: ${point.latitude.toStringAsFixed(6)}, ${point.longitude.toStringAsFixed(6)}',
+        name: 'Coordenadas: ${point.latitude.toStringAsFixed(6)}, ${point.longitude.toStringAsFixed(6)}',
+        displayName: 'Coordenadas: ${point.latitude.toStringAsFixed(6)}, ${point.longitude.toStringAsFixed(6)}',
         coordinate: point,
         type: 'coordinate',
         category: 'pin',
@@ -1024,7 +1011,7 @@ class SearchService {
         if (myGen == _queryGeneration && rev.displayName.isNotEmpty) {
           onUpdate([
             MapPlace(
-              name: rev.name.isNotEmpty && rev.name != 'Vị trí đã ghim' ? rev.name : immediatePlace.name,
+              name: rev.name.isNotEmpty && rev.name != 'Local marcado' ? rev.name : immediatePlace.name,
               displayName: rev.displayName,
               coordinate: point,
               type: 'coordinate',
@@ -1201,7 +1188,7 @@ class SearchService {
     try {
       var urlStr = '$_photonBaseUrl/api?q=${Uri.encodeComponent(query)}&limit=15';
       if (useBbox) {
-        urlStr += '&bbox=102.14,8.18,109.46,23.39';
+        urlStr += '&bbox=-74.0,-34.0,-34.7,5.3';
       }
       if (nearLocation != null) {
         urlStr += '&lat=${nearLocation.latitude}&lon=${nearLocation.longitude}';
@@ -1228,7 +1215,7 @@ class SearchService {
   }) async {
     try {
       final url = Uri.parse(
-        '$_nominatimBaseUrl/search?format=json&q=${Uri.encodeComponent(query)}&countrycodes=vn&addressdetails=1&limit=10&accept-language=vi',
+        '$_nominatimBaseUrl/search?format=json&q=${Uri.encodeComponent(query)}&countrycodes=br&addressdetails=1&limit=10&accept-language=pt-BR',
       );
 
       final response = await http.get(
@@ -1242,7 +1229,7 @@ class SearchService {
           final lat = double.tryParse(item['lat']?.toString() ?? '0') ?? 0.0;
           final lon = double.tryParse(item['lon']?.toString() ?? '0') ?? 0.0;
           final coord = LatLng(lat, lon);
-          final displayName = item['display_name'] as String? ?? 'Địa điểm';
+          final displayName = item['display_name'] as String? ?? 'Local';
           final name = item['name'] as String? ?? displayName.split(',').first.trim();
 
           double? dist;
@@ -1309,7 +1296,7 @@ class SearchService {
       } else if (district.isNotEmpty) {
         name = district;
       } else {
-        name = 'Địa điểm';
+        name = 'Local';
       }
 
       final addressParts = <String>[];
@@ -1392,7 +1379,7 @@ class SearchService {
           } else if (district.isNotEmpty) {
             name = district;
           } else {
-            name = 'Vị trí đã ghim';
+            name = 'Local marcado';
           }
 
           final addressParts = <String>[];
@@ -1418,7 +1405,7 @@ class SearchService {
     } catch (_) {}
 
     return MapPlace(
-      name: 'Vị trí đã ghim',
+      name: 'Local marcado',
       displayName: 'Tọa độ: ${location.latitude.toStringAsFixed(4)}, ${location.longitude.toStringAsFixed(4)}',
       coordinate: location,
       precision: PlacePrecision.coordinate,

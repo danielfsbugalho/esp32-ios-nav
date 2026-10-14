@@ -90,7 +90,7 @@ class _SavedPlaceDialogState extends State<SavedPlaceDialog> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                widget.isEditing ? 'Sửa tên địa điểm' : 'Lưu địa điểm',
+                widget.isEditing ? 'Editar nome do local' : 'Salvar local',
                 style: AppTypography.title2,
               ),
               IconButton(
@@ -100,13 +100,13 @@ class _SavedPlaceDialogState extends State<SavedPlaceDialog> {
             ],
           ),
           const SizedBox(height: 12),
-          const Text('Tên địa điểm', style: AppTypography.footnote),
+          const Text('Nome do local', style: AppTypography.footnote),
           const SizedBox(height: 6),
           TextField(
             controller: _nameController,
             autofocus: true,
             decoration: const InputDecoration(
-              hintText: 'Nhập tên (ví dụ: Nhà, Cơ quan, Quán quen...)',
+              hintText: 'Digite um nome (ex.: Casa, Trabalho, Academia...)',
               filled: true,
               fillColor: AppColors.canvas,
               contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -133,7 +133,7 @@ class _SavedPlaceDialogState extends State<SavedPlaceDialog> {
           ),
           const SizedBox(height: 20),
           PrimaryActionButton(
-            label: widget.isEditing ? 'Cập nhật' : 'Lưu vào Danh sách',
+            label: widget.isEditing ? 'Atualizar' : 'Salvar na lista',
             icon: Icons.bookmark_added_rounded,
             onPressed: _handleSave,
           ),

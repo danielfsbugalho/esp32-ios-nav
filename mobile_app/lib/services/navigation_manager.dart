@@ -249,18 +249,18 @@ class NavigationManager extends ChangeNotifier {
 
   String get bannerInstruction {
     final m = authoritativeCurrentManeuver;
-    if (m == null) return 'Tiếp tục đi thẳng';
+    if (m == null) return 'Siga em frente';
     if (m.maneuverType == ManeuverType.arrive ||
-        m.instruction.toLowerCase().contains('tới nơi') ||
-        m.instruction.toLowerCase().contains('điểm đến')) {
+        m.instruction.toLowerCase().contains('chegou') ||
+        m.instruction.toLowerCase().contains('destino')) {
       if (_hasArrived) {
-        return 'Bạn đã tới nơi.';
+        return 'Você chegou.';
       }
-      return 'Điểm đến ở phía trước';
+      return 'Destino à frente';
     }
     if (m.instruction.isNotEmpty) return m.instruction;
-    if (m.streetName.isNotEmpty) return 'Đi vào ${m.streetName}';
-    return 'Tiếp tục đi thẳng';
+    if (m.streetName.isNotEmpty) return 'Entre na ${m.streetName}';
+    return 'Siga em frente';
   }
 
   IconData get bannerTurnIcon {
@@ -376,7 +376,7 @@ class NavigationManager extends ChangeNotifier {
         });
       }
     } catch (_) {
-      _rawLocation ??= const LatLng(21.0285, 105.8542);
+      _rawLocation ??= const LatLng(-23.5505, -46.6333);
       _acceptedPhysicalLocation ??= _rawLocation;
       if (!_disposed) notifyListeners();
     }
@@ -466,7 +466,7 @@ class NavigationManager extends ChangeNotifier {
     _sendCurrentPayloadToEsp32();
 
     VoiceGuidanceService().announceTripStart(
-      route.title.isNotEmpty ? route.title : (currentStep?.streetName ?? 'Điểm đến'),
+      route.title.isNotEmpty ? route.title : (currentStep?.streetName ?? 'Destino'),
       route.totalDistanceMeters / 1000.0,
       (route.totalDurationSeconds / 60).round(),
     );
@@ -555,7 +555,7 @@ class NavigationManager extends ChangeNotifier {
     notifyListeners();
 
     VoiceGuidanceService().announceTripStart(
-      route.title.isNotEmpty ? route.title : (currentStep?.streetName ?? 'Điểm đến'),
+      route.title.isNotEmpty ? route.title : (currentStep?.streetName ?? 'Destino'),
       route.totalDistanceMeters / 1000.0,
       (route.totalDurationSeconds / 60).round(),
     );
@@ -840,7 +840,7 @@ class NavigationManager extends ChangeNotifier {
         totalDurationSeconds: 0,
         polylinePoints: oldRemaining,
         steps: const [],
-        summary: 'Lộ trình cũ',
+        summary: 'Rota anterior',
       );
       _secondaryRerouteStatus = 'fallback';
       _secondaryRouteRevision++;
@@ -870,7 +870,7 @@ class NavigationManager extends ChangeNotifier {
           totalDurationSeconds: rejoinRoute.totalDurationSeconds,
           polylinePoints: combinedPoints,
           steps: const [],
-          summary: 'Đường nối về lộ trình cũ',
+          summary: 'Retorno à rota anterior',
         );
         _secondaryRerouteStatus = 'applied';
         _secondaryRouteRevision++;
@@ -885,7 +885,7 @@ class NavigationManager extends ChangeNotifier {
             totalDurationSeconds: 0,
             polylinePoints: oldRemaining,
             steps: const [],
-            summary: 'Lộ trình cũ',
+            summary: 'Rota anterior',
           );
           _secondaryRerouteStatus = 'fallback';
         } else {
@@ -906,7 +906,7 @@ class NavigationManager extends ChangeNotifier {
           totalDurationSeconds: 0,
           polylinePoints: oldRemaining,
           steps: const [],
-          summary: 'Lộ trình cũ',
+          summary: 'Rota anterior',
         );
         _secondaryRerouteStatus = 'fallback';
       } else {
@@ -958,7 +958,7 @@ class NavigationManager extends ChangeNotifier {
             totalDurationSeconds: 0,
             polylinePoints: frozenOldRemaining,
             steps: const [],
-            summary: 'Lộ trình cũ',
+            summary: 'Rota anterior',
           );
           _secondaryRouteRevision++;
           _calculateSecondaryRejoin(currentPhys, frozenOldRemaining);
@@ -1134,10 +1134,10 @@ class NavigationManager extends ChangeNotifier {
     final int distToTurn;
     if (isArriveManeuver) {
       if (_hasArrived) {
-        street = 'Bạn đã tới nơi.';
+        street = 'Você chegou.';
         distToTurn = 0;
       } else {
-        street = step.streetName.isNotEmpty ? step.streetName : 'Điểm đến ở phía trước';
+        street = step.streetName.isNotEmpty ? step.streetName : 'Destino à frente';
         distToTurn = _distanceToNextManeuver.round();
       }
     } else {
@@ -1186,10 +1186,10 @@ class NavigationManager extends ChangeNotifier {
       previewDistToTurn = 0;
     } else if (isArrive) {
       if (_hasArrived) {
-        previewStreet = 'Bạn đã tới nơi.';
+        previewStreet = 'Você chegou.';
         previewDistToTurn = 0;
       } else {
-        previewStreet = (mStep?.streetName.isNotEmpty == true) ? mStep!.streetName : 'Điểm đến ở phía trước';
+        previewStreet = (mStep?.streetName.isNotEmpty == true) ? mStep!.streetName : 'Destino à frente';
         previewDistToTurn = _distanceToNextManeuver.round();
       }
     } else {

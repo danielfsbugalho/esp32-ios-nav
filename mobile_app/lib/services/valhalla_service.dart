@@ -44,7 +44,7 @@ class ValhallaService implements RoutingService {
         provider: 'valhalla',
         latency: Duration.zero,
         errorType: 'invalidUri',
-        safeMessage: 'Cấu hình URL Valhalla không hợp lệ (thiếu host: $url)',
+        safeMessage: 'Endereço do Valhalla inválido (sem host: $url)',
       );
     }
 
@@ -53,7 +53,7 @@ class ValhallaService implements RoutingService {
         'units': 'kilometers',
       };
       if (includeLanguage) {
-        directionsOptions['language'] = 'vi-VN';
+        directionsOptions['language'] = 'pt-BR';
       }
 
       return {
@@ -109,7 +109,7 @@ class ValhallaService implements RoutingService {
             httpStatus: 200,
             apiCode: 'EmptyTrip',
             errorType: 'emptyResponse',
-            safeMessage: 'Dữ liệu lộ trình Valhalla rỗng',
+            safeMessage: 'Rota do Valhalla vazia',
           );
         }
       }
@@ -117,7 +117,7 @@ class ValhallaService implements RoutingService {
       // HTTP Non-200 Diagnostic Handling
       String errorType = 'http';
       String? apiCode;
-      String safeMessage = 'Lỗi máy chủ Valhalla (HTTP ${response.statusCode})';
+      String safeMessage = 'Erro no servidor Valhalla (HTTP ${response.statusCode})';
 
       try {
         final errJson = jsonDecode(response.body) as Map<String, dynamic>;
@@ -127,20 +127,20 @@ class ValhallaService implements RoutingService {
 
         if (response.statusCode == 429) {
           errorType = 'rateLimited';
-          safeMessage = 'Dịch vụ định tuyến Valhalla đang quá tải. Hãy thử lại.';
+          safeMessage = 'Serviço Valhalla sobrecarregado. Tente de novo.';
         } else if (response.statusCode == 400) {
           if (errCode == '170' || errCode == '171' || (errMsg != null && (errMsg.contains('No suitable edges') || errMsg.contains('No route found')))) {
             errorType = 'noSegment';
-            safeMessage = 'Không tìm thấy đoạn đường phù hợp gần tọa độ (Valhalla)';
+            safeMessage = 'Nenhuma via encontrada perto do ponto (Valhalla)';
           } else {
             errorType = 'invalidRequest';
-            safeMessage = 'Yêu cầu định tuyến Valhalla không hợp lệ: ${errMsg ?? ""}';
+            safeMessage = 'Pedido de rota inválido (Valhalla): ${errMsg ?? ""}';
           }
         }
       } catch (_) {
         if (response.statusCode == 429) {
           errorType = 'rateLimited';
-          safeMessage = 'Dịch vụ định tuyến Valhalla đang quá tải. Hãy thử lại.';
+          safeMessage = 'Serviço Valhalla sobrecarregado. Tente de novo.';
         }
       }
 
@@ -160,7 +160,7 @@ class ValhallaService implements RoutingService {
         provider: 'valhalla',
         latency: latency,
         errorType: 'timeout',
-        safeMessage: 'Quá thời gian kết nối dịch vụ Valhalla',
+        safeMessage: 'Tempo esgotado ao conectar ao Valhalla',
       );
     } on SocketException catch (e) {
       final latency = stopwatch.elapsed;
@@ -172,8 +172,8 @@ class ValhallaService implements RoutingService {
         latency: latency,
         errorType: errorType,
         safeMessage: isDns
-            ? 'Không thể phân giải địa chỉ máy chủ Valhalla (DNS)'
-            : 'Không thể kết nối mạng tới Valhalla',
+            ? 'Não foi possível achar o servidor Valhalla (DNS)'
+            : 'Sem conexão com o Valhalla',
       );
     } on HandshakeException catch (e) {
       final latency = stopwatch.elapsed;
@@ -182,7 +182,7 @@ class ValhallaService implements RoutingService {
         provider: 'valhalla',
         latency: latency,
         errorType: 'tls',
-        safeMessage: 'Lỗi bảo mật kết nối Valhalla (TLS)',
+        safeMessage: 'Erro de segurança na conexão Valhalla (TLS)',
       );
     } catch (e) {
       final latency = stopwatch.elapsed;
@@ -202,7 +202,7 @@ class ValhallaService implements RoutingService {
         provider: 'valhalla',
         latency: latency,
         errorType: errorType,
-        safeMessage: 'Lỗi kết nối Valhalla: $e',
+        safeMessage: 'Erro de conexão Valhalla: $e',
       );
     }
   }
@@ -246,7 +246,7 @@ class ValhallaService implements RoutingService {
       for (final m in maneuvers) {
         final instruction = (m['instruction'] as String? ?? '').trim();
         final streetNames = (m['street_names'] as List?)?.map((e) => e.toString()).toList() ?? [];
-        final streetName = streetNames.isNotEmpty ? streetNames.first : 'Tiếp tục đi thẳng';
+        final streetName = streetNames.isNotEmpty ? streetNames.first : 'Siga em frente';
         final distanceMeters = ((m['length'] as num).toDouble()) * 1000.0;
         final durationSeconds = (m['time'] as num).toDouble();
 
@@ -261,7 +261,7 @@ class ValhallaService implements RoutingService {
 
         steps.add(NavStep(
           stepIndex: globalIndex++,
-          instruction: instruction.isNotEmpty ? instruction : 'Tiếp tục trên $streetName',
+          instruction: instruction.isNotEmpty ? instruction : 'Siga pela $streetName',
           streetName: streetName,
           distanceMeters: distanceMeters,
           durationSeconds: durationSeconds,
@@ -275,13 +275,13 @@ class ValhallaService implements RoutingService {
       }
 
       return NavRoute(
-        title: leg['summary']?['name'] ?? 'Lộ trình Valhalla',
-        subtitle: 'Tuyến xe máy tối ưu',
+        title: leg['summary']?['name'] ?? 'Rota Valhalla',
+        subtitle: 'Rota ideal',
         totalDistanceMeters: totalDistanceMeters,
         totalDurationSeconds: totalDurationSeconds,
         polylinePoints: polylinePoints,
         steps: steps,
-        summary: leg['summary']?['name'] ?? 'Lộ trình Valhalla',
+        summary: leg['summary']?['name'] ?? 'Rota Valhalla',
         provider: 'valhalla',
         isFallbackSynthetic: false,
       );

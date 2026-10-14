@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    'Bản đồ dẫn đường thông minh',
+                                    'Mapa de navegação inteligente',
                                     style: AppTypography.caption.copyWith(
                                       color: isDark ? Colors.white70 : AppColors.textSecondary,
                                     ),
@@ -143,7 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Row(
                             children: [
                               StatusBadge(
-                                text: isBle ? 'KẾT NỐI' : 'CHƯA KẾT NỐI',
+                                text: isBle ? 'CONECTADO' : 'DESCONECTADO',
                                 color: isBle ? AppColors.success : (isDark ? Colors.white60 : AppColors.textSecondary),
                                 icon: isBle ? Icons.bluetooth_connected : Icons.bluetooth_disabled,
                               ),
@@ -151,8 +151,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               Expanded(
                                 child: Text(
                                   isBle
-                                      ? (isWifi ? 'BLE + Hotspot (${bleService.wifiIp})' : 'Đã kết nối BLE ESP32')
-                                      : 'Chưa kết nối thiết bị ESP32',
+                                      ? (isWifi ? 'BLE + Hotspot (${bleService.wifiIp})' : 'ESP32 conectado via Bluetooth')
+                                      : 'ESP32 não conectado',
                                   style: AppTypography.footnote.copyWith(
                                     fontWeight: FontWeight.w600,
                                     color: isBle
@@ -178,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
                             child: Text(
-                              'ỨNG DỤNG & ĐIỀU HƯỚNG',
+                              'APP E NAVEGAÇÃO',
                               style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
@@ -192,8 +192,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           // Navigation Items
                           _buildDrawerTile(
                             icon: Icons.map_rounded,
-                            title: 'Bản đồ dẫn đường',
-                            subtitle: 'Giao diện chính bản đồ',
+                            title: 'Mapa de navegação',
+                            subtitle: 'Tela principal do mapa',
                             isSelected: _currentIndex == 0,
                             isDark: isDark,
                             onTap: () {
@@ -203,8 +203,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           _buildDrawerTile(
                             icon: Icons.bluetooth_searching_rounded,
-                            title: 'Kết nối ESP32',
-                            subtitle: 'Quét BLE & Cài đặt WiFi Hotspot',
+                            title: 'Conectar ESP32',
+                            subtitle: 'Buscar Bluetooth e configurar Wi-Fi',
                             isSelected: _currentIndex == 1,
                             isDark: isDark,
                             badgeColor: isBle ? AppColors.success : null,
@@ -215,8 +215,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           _buildDrawerTile(
                             icon: Icons.screenshot_monitor_rounded,
-                            title: 'Mô phỏng Màn hình ESP32',
-                            subtitle: 'Xem trước HUD, Mini Map & Stream',
+                            title: 'Simular tela do ESP32',
+                            subtitle: 'Prévia da tela, minimapa e transmissão',
                             isSelected: _currentIndex == 2,
                             isDark: isDark,
                             onTap: () {
@@ -248,7 +248,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           const SizedBox(width: 10),
                           Expanded(
                             child: Text(
-                              'Kéo từ mép trái bản đồ để mở menu nhanh bất cứ lúc nào.',
+                              'Arraste da borda esquerda do mapa para abrir o menu a qualquer momento.',
                               style: AppTypography.caption.copyWith(
                                 color: isDark ? Colors.white70 : AppColors.textSecondary,
                               ),

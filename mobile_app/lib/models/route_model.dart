@@ -212,8 +212,8 @@ class NavRoute {
     required this.polylinePoints,
     required this.steps,
     required this.summary,
-    this.title = 'Lộ trình đề xuất',
-    this.subtitle = 'Lộ trình tối ưu',
+    this.title = 'Rota sugerida',
+    this.subtitle = 'Rota ideal',
     this.isFastest = false,
     this.isShortest = false,
     this.isTollFree = true,
@@ -236,21 +236,21 @@ class NavRoute {
     if (minutes >= 60) {
       final hours = minutes ~/ 60;
       final remainingMins = minutes % 60;
-      if (remainingMins == 0) return '$hours giờ';
-      return '$hours giờ $remainingMins phút';
+      if (remainingMins == 0) return '$hours h';
+      return '$hours h $remainingMins min';
     }
-    return '$minutes phút';
+    return '$minutes min';
   }
 
   String get formattedDiffTag {
     if (durationDiffMinutes == 0 && distanceDiffKm == 0) {
-      return isFastest ? '⚡ Nhanh nhất' : (isShortest ? '📏 Ngắn nhất' : '⭐ Tốt nhất');
+      return isFastest ? '⚡ Mais rápida' : (isShortest ? '📏 Mais curta' : '⭐ Melhor');
     }
     final parts = <String>[];
     if (durationDiffMinutes > 0) {
-      parts.add('+$durationDiffMinutes phút');
+      parts.add('+$durationDiffMinutes min');
     } else if (durationDiffMinutes < 0) {
-      parts.add('${durationDiffMinutes.abs()} phút nhanh hơn');
+      parts.add('${durationDiffMinutes.abs()} min mais rápida');
     }
 
     if (distanceDiffKm > 0) {
@@ -527,7 +527,7 @@ class MapPlace {
   factory MapPlace.fromJson(Map<String, dynamic> json, {LatLng? userLocation}) {
     final lat = double.tryParse(json['lat']?.toString() ?? json['latitude']?.toString() ?? '0') ?? 0.0;
     final lon = double.tryParse(json['lon']?.toString() ?? json['longitude']?.toString() ?? '0') ?? 0.0;
-    final displayName = json['display_name'] as String? ?? json['displayName'] as String? ?? 'Địa điểm';
+    final displayName = json['display_name'] as String? ?? json['displayName'] as String? ?? 'Local';
     final name = json['name'] as String? ?? displayName.split(',').first;
     final coord = LatLng(lat, lon);
 
@@ -674,44 +674,44 @@ class QuickSearchCategory {
 
   static const List<QuickSearchCategory> defaultCategories = [
     QuickSearchCategory(
-      title: 'Cây xăng',
-      query: 'cây xăng, trạm xăng petrolimex',
+      title: 'Posto',
+      query: 'posto de gasolina',
       icon: Icons.local_gas_station_rounded,
       color: Color(0xFFFF9F1C),
     ),
     QuickSearchCategory(
-      title: 'Quán ăn',
-      query: 'quán ăn, nhà hàng',
+      title: 'Restaurante',
+      query: 'restaurante',
       icon: Icons.restaurant_rounded,
       color: Color(0xFFFF4081),
     ),
     QuickSearchCategory(
-      title: 'Cà phê',
-      query: 'quán cafe, cà phê',
+      title: 'Café',
+      query: 'cafeteria',
       icon: Icons.local_cafe_rounded,
       color: Color(0xFF8D6E63),
     ),
     QuickSearchCategory(
-      title: 'Bệnh viện',
-      query: 'bệnh viện, phòng khám, nhà thuốc',
+      title: 'Hospital',
+      query: 'hospital',
       icon: Icons.local_hospital_rounded,
       color: Color(0xFFEF4444),
     ),
     QuickSearchCategory(
-      title: 'Bãi đỗ xe',
-      query: 'bãi gửi xe, đỗ xe',
+      title: 'Estacionamento',
+      query: 'estacionamento',
       icon: Icons.local_parking_rounded,
       color: Color(0xFF3B82F6),
     ),
     QuickSearchCategory(
-      title: 'Siêu thị',
-      query: 'siêu thị, winmart, bách hóa xanh',
+      title: 'Supermercado',
+      query: 'supermercado',
       icon: Icons.shopping_cart_rounded,
       color: Color(0xFF10B981),
     ),
     QuickSearchCategory(
-      title: 'ATM / Ngân hàng',
-      query: 'cây atm, ngân hàng',
+      title: 'Caixa eletrônico / Banco',
+      query: 'caixa eletrônico',
       icon: Icons.account_balance_rounded,
       color: Color(0xFF00C2FF),
     ),

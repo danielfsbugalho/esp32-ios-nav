@@ -933,7 +933,7 @@ class GoogleMapsParser {
     if (targetMetadata?.targetCoordinate != null) {
         return GoogleMapsResolvedLink(
         finalUri: Uri.tryParse(finalUrl),
-        placeName: (userPrefix.isNotEmpty ? userPrefix : null) ?? targetMetadata!.title ?? placeTitle ?? 'Vị trí Google Maps',
+        placeName: (userPrefix.isNotEmpty ? userPrefix : null) ?? targetMetadata!.title ?? placeTitle ?? 'Local do Google Maps',
         exactCoordinate: targetMetadata!.targetCoordinate,
         exactDestinationCoordinate: targetMetadata.targetCoordinate,
         cameraCoordinate: semanticsFinal.cameraCoord,
@@ -1085,7 +1085,7 @@ class GoogleMapsParser {
     // Exact destination coordinate (Authority 1-5)
     if (resolved.exactDestinationCoordinate != null) {
       return MapPlace(
-        name: resolved.placeName ?? 'Vị trí Google Maps',
+        name: resolved.placeName ?? 'Local do Google Maps',
         displayName: resolved.address ??
             resolved.placeName ??
             'Tọa độ Google Maps: ${resolved.exactDestinationCoordinate!.latitude.toStringAsFixed(5)}, ${resolved.exactDestinationCoordinate!.longitude.toStringAsFixed(5)}',

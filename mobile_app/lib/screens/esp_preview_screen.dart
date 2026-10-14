@@ -26,10 +26,10 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
 
   bool _showCallPopup = false;
   bool _showSmsPopup = false;
-  final TextEditingController _callerNameCtrl = TextEditingController(text: 'Mẹ');
+  final TextEditingController _callerNameCtrl = TextEditingController(text: 'Mãe');
   final TextEditingController _callerNumCtrl = TextEditingController(text: '0912 345 678');
   final TextEditingController _smsSenderCtrl = TextEditingController(text: 'Zalo: Anh Nam');
-  final TextEditingController _smsMsgCtrl = TextEditingController(text: 'Bạn đang ở đâu đấy?');
+  final TextEditingController _smsMsgCtrl = TextEditingController(text: 'Onde você está?');
 
   bool _enableIPhoneNotifications = true;
   bool _enableCallNotifications = true;
@@ -132,7 +132,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
     if (decoded == null) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Không thể giải mã file ảnh!'), backgroundColor: Colors.red),
+          const SnackBar(content: Text('Não foi possível abrir a imagem!'), backgroundColor: Colors.red),
         );
       }
       return;
@@ -177,7 +177,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
 
     if (!bleService.isConnected) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng kết nối ESP32 qua Bluetooth trước!'), backgroundColor: Colors.orange),
+        const SnackBar(content: Text('Conecte o ESP32 por Bluetooth primeiro!'), backgroundColor: Colors.orange),
       );
       return;
     }
@@ -190,7 +190,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
     setState(() {
       _isUploadingBg = true;
       _uploadProgress = 0.0;
-      _uploadStatusText = 'Đang tải ảnh (${(jpegBytes.length / 1024).toStringAsFixed(1)} KB)...';
+      _uploadStatusText = 'Enviando imagem (${(jpegBytes.length / 1024).toStringAsFixed(1)} KB)...';
     });
 
     final int chunkSize = bleService.safeChunkSize;
@@ -227,7 +227,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
 
       setState(() {
         _uploadProgress = (i + 1) / totalChunks;
-        _uploadStatusText = 'Đang nạp Flash: ${((i + 1) / totalChunks * 100).toInt()}% (${i + 1}/$totalChunks)';
+        _uploadStatusText = 'Gravando: ${((i + 1) / totalChunks * 100).toInt()}% (${i + 1}/$totalChunks)';
       });
 
       await Future.delayed(const Duration(milliseconds: 15));
@@ -247,15 +247,15 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
           SnackBar(
             content: Text(
               isWaitScreen
-                  ? '✓ Đã lưu ảnh màn chờ vào Flash ESP32 thành công!'
-                  : '✓ Đã lưu ảnh màn Map vào Flash ESP32 thành công!',
+                  ? '✓ Imagem da tela de espera salva no ESP32!'
+                  : '✓ Imagem da tela do mapa salva no ESP32!',
             ),
             backgroundColor: const Color(0xFF05FFA1),
           ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Lỗi gửi ảnh sang ESP32!'), backgroundColor: Colors.red),
+          const SnackBar(content: Text('Erro ao enviar imagem ao ESP32!'), backgroundColor: Colors.red),
         );
       }
     }
@@ -265,7 +265,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
     final bleService = Provider.of<BleService>(context, listen: false);
     if (!bleService.isConnected) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng kết nối ESP32 qua Bluetooth!'), backgroundColor: Colors.orange),
+        const SnackBar(content: Text('Conecte o ESP32 por Bluetooth!'), backgroundColor: Colors.orange),
       );
       return;
     }
@@ -284,7 +284,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
     if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(isWaitScreen ? 'Đã xóa ảnh màn chờ, khôi phục mặc định.' : 'Đã xóa ảnh màn Map, khôi phục mặc định.'),
+          content: Text(isWaitScreen ? 'Imagem da tela de espera apagada (padrão restaurado).' : 'Imagem da tela do mapa apagada (padrão restaurado).'),
           backgroundColor: Colors.blueAccent,
         ),
       );
@@ -334,7 +334,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.primary),
-          tooltip: 'Quay lại Bản đồ',
+          tooltip: 'Voltar ao mapa',
           onPressed: () {
             if (widget.onBackToMap != null) {
               widget.onBackToMap!();
@@ -347,7 +347,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
           children: [
             Icon(Icons.tv_rounded, color: AppColors.primary),
             SizedBox(width: 10),
-            Text('Mô phỏng Màn hình ESP32', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            Text('Simular tela do ESP32', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
           ],
         ),
       ),
@@ -384,7 +384,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                           ),
                           const SizedBox(width: 8),
                           Text(
-                            streamService.isStreaming ? 'Đang Stream JPEG Zoom x${streamService.minimapZoom} sang ESP32' : 'Dừng Stream',
+                            streamService.isStreaming ? 'Transmitindo mapa (zoom x${streamService.minimapZoom}) para o ESP32' : 'Parar transmissão',
                             style: TextStyle(
                               color: streamService.isStreaming ? AppColors.textPrimary : AppColors.textSecondary,
                               fontWeight: FontWeight.bold,
@@ -412,7 +412,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                     children: [
                       Column(
                         children: [
-                          const Text('FPS THỰC TẾ', style: TextStyle(color: AppColors.textSecondary, fontSize: 10, fontWeight: FontWeight.bold)),
+                          const Text('FPS REAL', style: TextStyle(color: AppColors.textSecondary, fontSize: 10, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 2),
                           Text(
                             '${streamService.actualFps.toStringAsFixed(1)} FPS',
@@ -423,7 +423,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                       Container(width: 1, height: 24, color: AppColors.border),
                       Column(
                         children: [
-                          const Text('KÍCH THƯỚC FRAME', style: TextStyle(color: AppColors.textSecondary, fontSize: 10, fontWeight: FontWeight.bold)),
+                          const Text('TAMANHO DA IMAGEM', style: TextStyle(color: AppColors.textSecondary, fontSize: 10, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 2),
                           Text(
                             '${streamService.frameSizeKb} KB',
@@ -434,7 +434,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                       Container(width: 1, height: 24, color: AppColors.border),
                       Column(
                         children: [
-                          const Text('MỤC TIÊU', style: TextStyle(color: AppColors.textSecondary, fontSize: 10, fontWeight: FontWeight.bold)),
+                          const Text('META', style: TextStyle(color: AppColors.textSecondary, fontSize: 10, fontWeight: FontWeight.bold)),
                           const SizedBox(height: 2),
                           Text(
                             '${streamService.targetFps} FPS',
@@ -471,7 +471,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                           Icon(Icons.zoom_in_rounded, color: AppColors.primary, size: 20),
                           SizedBox(width: 8),
                           Text(
-                            'TỶ LỆ PHÓNG TO MINIMAP',
+                            'ZOOM DO MINIMAPA',
                             style: TextStyle(
                               color: AppColors.textPrimary,
                               fontWeight: FontWeight.bold,
@@ -503,8 +503,8 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                   const SizedBox(height: 6),
                   Text(
                     streamService.minimapZoom >= 17
-                        ? 'Độ chi tiết cao: Hiển thị toà nhà, khu dân cư, số nhà & POI (khớp ảnh chụp)'
-                        : 'Toàn cảnh: Hiển thị trục đường chính và các góc rẽ',
+                        ? 'Muito detalhe: prédios, bairros, números e pontos de interesse'
+                        : 'Visão geral: vias principais e curvas',
                     style: TextStyle(
                       color: streamService.minimapZoom >= 17 ? AppColors.success : AppColors.textSecondary,
                       fontSize: 11,
@@ -534,10 +534,10 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _buildZoomPresetChip(streamService, 14, 'x14 Xa'),
-                      _buildZoomPresetChip(streamService, 15, 'x15 Vùng'),
-                      _buildZoomPresetChip(streamService, 16, 'x16 Chuẩn'),
-                      _buildZoomPresetChip(streamService, 17, 'x17 Chi tiết'),
-                      _buildZoomPresetChip(streamService, 18, 'x18 Cận cảnh'),
+                      _buildZoomPresetChip(streamService, 15, 'x15 Região'),
+                      _buildZoomPresetChip(streamService, 16, 'x16 Padrão'),
+                      _buildZoomPresetChip(streamService, 17, 'x17 Detalhe'),
+                      _buildZoomPresetChip(streamService, 18, 'x18 Perto'),
                     ],
                   ),
                 ],
@@ -596,7 +596,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                               child: Text(
                                 mediaService.hasMedia
                                     ? '♫ ${mediaService.songTitle}${mediaService.songArtist.isNotEmpty ? " - ${mediaService.songArtist}" : ""}'
-                                    : '-- Chưa phát nhạc --',
+                                    : '-- Nenhuma música --',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -695,12 +695,12 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'BẢN ĐỒ MINIMAP ESP32',
+                          'MINIMAPA DO ESP32',
                           style: TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 0.5),
                         ),
                         SizedBox(height: 2),
                         Text(
-                          'Nguồn map & style gửi sang ESP32',
+                          'Estilo do mapa enviado ao ESP32',
                           style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
                         ),
                       ],
@@ -715,7 +715,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                     items: const [
                       DropdownMenuItem(value: 'streets-v2', child: Text('MapTiler Streets')),
                       DropdownMenuItem(value: 'streets-v2-dark', child: Text('MapTiler Dark')),
-                      DropdownMenuItem(value: 'hybrid', child: Text('Hybrid (Vệ tinh)')),
+                      DropdownMenuItem(value: 'hybrid', child: Text('Híbrido (satélite)')),
                     ],
                     onChanged: (val) {
                       if (val != null) {
@@ -750,7 +750,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                           Icon(Icons.music_note_rounded, color: AppColors.primary, size: 16),
                           SizedBox(width: 6),
                           Text(
-                            'ĐIỀU KHIỂN NHẠC & CHẾ ĐỘ MÀN HÌNH',
+                            'MÚSICA E MODO DA TELA',
                             style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.bold),
                           ),
                         ],
@@ -763,7 +763,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                           border: Border.all(color: navManager.isNavigating ? AppColors.primary : const Color(0xFF05FFA1)),
                         ),
                         child: Text(
-                          navManager.isNavigating ? 'DẪN ĐƯỜNG' : 'CHẾ ĐỘ CHỜ',
+                          navManager.isNavigating ? 'NAVEGAÇÃO' : 'ESPERA',
                           style: TextStyle(
                             color: navManager.isNavigating ? AppColors.primary : const Color(0xFF05FFA1),
                             fontSize: 10,
@@ -798,7 +798,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                mediaService.hasMedia ? 'PHÁT HIỆN TỪ IPHONE (REAL-TIME)' : 'CHƯA PHÁT NHẠC TRÊN IPHONE',
+                                mediaService.hasMedia ? 'DETECTADO NO IPHONE (TEMPO REAL)' : 'NENHUMA MÚSICA NO IPHONE',
                                 style: TextStyle(
                                   color: mediaService.hasMedia ? const Color(0xFF05FFA1) : Colors.white38,
                                   fontSize: 9,
@@ -810,7 +810,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                               Text(
                                 mediaService.hasMedia
                                     ? '${mediaService.songTitle} - ${mediaService.songArtist}'
-                                    : 'Mở Spotify, Apple Music, YouTube hoặc Zing MP3...',
+                                    : 'Abra o Spotify, Apple Music ou YouTube...',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
@@ -834,7 +834,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                         avatar: const Icon(Icons.refresh_rounded, size: 14, color: AppColors.primary),
                         backgroundColor: AppColors.primary.withAlpha(25),
                         side: const BorderSide(color: AppColors.primary),
-                        label: const Text('Lấy lại nhạc iPhone', style: TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold)),
+                        label: const Text('Atualizar música do iPhone', style: TextStyle(color: AppColors.primary, fontSize: 11, fontWeight: FontWeight.bold)),
                         onPressed: () => mediaService.pollNowPlaying(),
                       ),
                       ActionChip(
@@ -846,14 +846,14 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                       ActionChip(
                         backgroundColor: AppColors.canvas,
                         side: const BorderSide(color: AppColors.border),
-                        label: const Text('Simulate: Nơi Này Có Anh', style: TextStyle(color: AppColors.textPrimary, fontSize: 11)),
+                        label: const Text('Simular: música de teste', style: TextStyle(color: AppColors.textPrimary, fontSize: 11)),
                         onPressed: () => mediaService.setMockSong('Noi Nay Co Anh', 'Son Tung M-TP'),
                       ),
                       ActionChip(
                         avatar: const Icon(Icons.edit, size: 14, color: AppColors.primary),
                         backgroundColor: AppColors.canvas,
                         side: const BorderSide(color: AppColors.border),
-                        label: const Text('Nhập tùy ý...', style: TextStyle(color: AppColors.textPrimary, fontSize: 11)),
+                        label: const Text('Digite...', style: TextStyle(color: AppColors.textPrimary, fontSize: 11)),
                         onPressed: () => _showEditSongDialog(context, navManager),
                       ),
                     ],
@@ -870,7 +870,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                         ),
                         icon: const Icon(Icons.stop_rounded, size: 16),
-                        label: const Text('Dừng dẫn đường (Về chế độ chờ)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                        label: const Text('Parar navegação (voltar à espera)', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
                         onPressed: () => navManager.stopNavigation(),
                       ),
                     ),
@@ -898,14 +898,14 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                       Icon(Icons.photo_library_rounded, color: AppColors.primary, size: 20),
                       SizedBox(width: 8),
                       Text(
-                        'CÀI ĐẶT HÌNH NỀN TÙY CHỌN (FLASH ESP32)',
+                        'FUNDO DE TELA PERSONALIZADO (ESP32)',
                         style: TextStyle(color: AppColors.primary, fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    'Ảnh được nạp và lưu vĩnh viễn vào bộ nhớ Flash SPIFFS của ESP32 đến khi bạn thay mới.',
+                    'A imagem fica salva na memória do ESP32 até você trocar.',
                     style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
                   ),
                   const SizedBox(height: 12),
@@ -955,7 +955,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Text('Ảnh Ngang (Màn Chờ)', style: TextStyle(color: AppColors.textPrimary, fontSize: 12, fontWeight: FontWeight.bold)),
+                              const Text('Imagem horizontal (espera)', style: TextStyle(color: AppColors.textPrimary, fontSize: 12, fontWeight: FontWeight.bold)),
                               const SizedBox(height: 2),
                               const Text('320 x 240 px', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 10)),
                               const SizedBox(height: 8),
@@ -977,7 +977,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                                           children: [
                                             Icon(Icons.wallpaper_rounded, color: Colors.white38, size: 28),
                                             SizedBox(height: 4),
-                                            Text('Màn chờ kết nối', style: TextStyle(color: Colors.white38, fontSize: 9)),
+                                            Text('Tela de espera', style: TextStyle(color: Colors.white38, fontSize: 9)),
                                           ],
                                         ),
                                 ),
@@ -993,7 +993,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                   ),
                                   icon: const Icon(Icons.file_upload_outlined, size: 16),
-                                  label: const Text('Chọn ảnh', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                  label: const Text('Escolher imagem', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                                   onPressed: _isUploadingBg ? null : () => _pickAndUploadImage(isWaitScreen: true),
                                 ),
                               ),
@@ -1003,7 +1003,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                                   visualDensity: VisualDensity.compact,
                                 ),
                                 onPressed: _isUploadingBg ? null : () => _deleteBgImage(isWaitScreen: true),
-                                child: const Text('Xóa / Mặc định', style: TextStyle(color: Colors.redAccent, fontSize: 10)),
+                                child: const Text('Apagar / padrão', style: TextStyle(color: Colors.redAccent, fontSize: 10)),
                               ),
                             ],
                           ),
@@ -1023,7 +1023,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              const Text('Ảnh Dọc (Màn Map)', style: TextStyle(color: AppColors.textPrimary, fontSize: 12, fontWeight: FontWeight.bold)),
+                              const Text('Imagem vertical (mapa)', style: TextStyle(color: AppColors.textPrimary, fontSize: 12, fontWeight: FontWeight.bold)),
                               const SizedBox(height: 2),
                               const Text('144 x 208 px', style: TextStyle(color: Color(0xFF94A3B8), fontSize: 10)),
                               const SizedBox(height: 8),
@@ -1045,7 +1045,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                                           children: [
                                             Icon(Icons.map_outlined, color: Colors.white38, size: 28),
                                             SizedBox(height: 4),
-                                            Text('Chờ xuất phát', style: TextStyle(color: Colors.white38, fontSize: 9)),
+                                            Text('Aguardando partida', style: TextStyle(color: Colors.white38, fontSize: 9)),
                                           ],
                                         ),
                                 ),
@@ -1061,7 +1061,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                                   ),
                                   icon: const Icon(Icons.file_upload_outlined, size: 16),
-                                  label: const Text('Chọn ảnh', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
+                                  label: const Text('Escolher imagem', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold)),
                                   onPressed: _isUploadingBg ? null : () => _pickAndUploadImage(isWaitScreen: false),
                                 ),
                               ),
@@ -1071,7 +1071,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                                   visualDensity: VisualDensity.compact,
                                 ),
                                 onPressed: _isUploadingBg ? null : () => _deleteBgImage(isWaitScreen: false),
-                                child: const Text('Xóa / Mặc định', style: TextStyle(color: Colors.redAccent, fontSize: 10)),
+                                child: const Text('Apagar / padrão', style: TextStyle(color: Colors.redAccent, fontSize: 10)),
                               ),
                             ],
                           ),
@@ -1112,7 +1112,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                           Icon(Icons.notifications_active_rounded, color: AppColors.primary, size: 20),
                           SizedBox(width: 8),
                           Text(
-                            'Thông báo iPhone (ANCS)',
+                            'Notificações do iPhone (ANCS)',
                             style: TextStyle(
                               color: AppColors.textPrimary,
                               fontSize: 15,
@@ -1134,7 +1134,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                   ),
                   const SizedBox(height: 4),
                   const Text(
-                    'Tự động hiển thị cuộc gọi đến và tin nhắn từ iPhone lên màn hình ESP32 qua giao thức Apple ANCS.',
+                    'Mostra ligações e mensagens do iPhone na tela do ESP32 (Apple ANCS).',
                     style: TextStyle(color: AppColors.textSecondary, fontSize: 12, height: 1.4),
                   ),
                   const SizedBox(height: 12),
@@ -1154,10 +1154,10 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                         SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            'Để nhận thông báo cuộc gọi & tin nhắn thật từ iOS:\n'
-                            '1. Mở Cài đặt iPhone ➔ Bluetooth\n'
-                            '2. Bấm biểu tượng (i) bên cạnh thiết bị "ysiducw"\n'
-                            '3. BẬT mục "Chia sẻ thông báo hệ thống" (Share System Notifications).',
+                            'Para receber ligações e mensagens do iPhone:\n'
+                            '1. Abra Ajustes ➔ Bluetooth\n'
+                            '2. Toque no (i) ao lado do aparelho "ESP32 Nav"\n'
+                            '3. ATIVE "Compartilhar Notificações do Sistema".',
                             style: TextStyle(color: AppColors.textSecondary, fontSize: 11, height: 1.45),
                           ),
                         ),
@@ -1179,11 +1179,11 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                             dense: true,
                             leading: const Icon(Icons.phone_in_talk_rounded, color: AppColors.success, size: 20),
                             title: const Text(
-                              'Thông báo cuộc gọi',
+                              'Aviso de ligação',
                               style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                             ),
                             subtitle: const Text(
-                              'Hiển thị tên người gọi & số điện thoại',
+                              'Mostra nome e número de quem liga',
                               style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
                             ),
                             trailing: Switch.adaptive(
@@ -1201,11 +1201,11 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                             dense: true,
                             leading: const Icon(Icons.chat_bubble_outline_rounded, color: AppColors.primary, size: 20),
                             title: const Text(
-                              'Thông báo tin nhắn',
+                              'Aviso de mensagem',
                               style: TextStyle(color: AppColors.textPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                             ),
                             subtitle: const Text(
-                              'Hiển thị người gửi và nội dung xem trước',
+                              'Mostra remetente e prévia da mensagem',
                               style: TextStyle(color: AppColors.textSecondary, fontSize: 11),
                             ),
                             trailing: Switch.adaptive(
@@ -1239,7 +1239,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: AppColors.surface,
-        title: const Text('Đổi bài hát đang phát', style: TextStyle(color: Colors.white, fontSize: 16)),
+        title: const Text('Trocar música tocando', style: TextStyle(color: Colors.white, fontSize: 16)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -1247,7 +1247,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
               controller: titleCtrl,
               style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(
-                labelText: 'Tên bài hát',
+                labelText: 'Nome da música',
                 labelStyle: TextStyle(color: AppColors.primary),
                 enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
                 focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
@@ -1258,7 +1258,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
               controller: artistCtrl,
               style: const TextStyle(color: Colors.white),
               decoration: const InputDecoration(
-                labelText: 'Tên ca sĩ / nghệ sĩ',
+                labelText: 'Cantor / artista',
                 labelStyle: TextStyle(color: AppColors.primary),
                 enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
                 focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
@@ -1269,7 +1269,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Hủy', style: TextStyle(color: Colors.white54)),
+            child: const Text('Cancelar', style: TextStyle(color: Colors.white54)),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -1282,7 +1282,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
               }
               Navigator.pop(ctx);
             },
-            child: const Text('Cập nhật', style: TextStyle(fontWeight: FontWeight.bold)),
+            child: const Text('Atualizar', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
         ],
       ),
@@ -1423,7 +1423,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                       ),
                       const SizedBox(width: 3),
                       Text(
-                        hasSong ? 'ĐANG PHÁT' : 'CHƯA PHÁT NHẠC',
+                        hasSong ? 'TOCANDO' : 'SEM MÚSICA',
                         style: TextStyle(
                           color: hasSong ? const Color(0xFFFFB800) : Colors.white38,
                           fontSize: 9,
@@ -1435,7 +1435,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                   ),
                   const SizedBox(height: 3),
                   Text(
-                    (hasSong ? navManager.currentSongTitle : 'MỞ NHẠC TRÊN IPHONE').toUpperCase(),
+                    (hasSong ? navManager.currentSongTitle : 'ABRA UMA MÚSICA NO IPHONE').toUpperCase(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     textAlign: TextAlign.center,
@@ -1483,7 +1483,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
 
         // 4. Bottom Standby Status
         const Text(
-          'SẴN SÀNG DI CHUYỂN',
+          'PRONTO PARA SAIR',
           style: TextStyle(
             color: Color(0xFF05FFA1),
             fontSize: 10,
@@ -1500,7 +1500,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
     final step = navManager.currentStep;
     final dist = navManager.distanceToNextManeuver.round() > 0 ? navManager.distanceToNextManeuver.round() : 208;
     final distStr = dist >= 1000 ? '${(dist / 1000).toStringAsFixed(1)}km' : '${dist}m';
-    final street = step?.streetName.isNotEmpty == true ? step!.streetName : 'CẦU SÔNG LỪ';
+    final street = step?.streetName.isNotEmpty == true ? step!.streetName : 'AV. BRASIL';
     final speed = navManager.currentSpeedKmh.round();
     final etaMins = navManager.isNavigating
         ? (navManager.remainingEtaMinutes > 0 ? navManager.remainingEtaMinutes : 1)
@@ -1592,7 +1592,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'DỰ KIẾN',
+                  'PREVISÃO',
                   style: TextStyle(color: Color(0xFF64748B), fontSize: 8, fontWeight: FontWeight.bold),
                 ),
                 Text(
@@ -1700,7 +1700,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
                 Row(
                   children: [
                     const Text(
-                      'đang gọi đến...',
+                      'está ligando...',
                       style: TextStyle(color: Color(0xFF22C55E), fontSize: 11, fontWeight: FontWeight.w600),
                     ),
                     if (number.isNotEmpty && number != 'unknown' && number != 'Zalo Call' && number != name) ...[
@@ -1778,7 +1778,7 @@ class _EspPreviewScreenState extends State<EspPreviewScreen> {
               children: [
                 Row(
                   children: [
-                    const Text('Người gửi: ', style: TextStyle(color: Colors.white54, fontSize: 10)),
+                    const Text('Remetente: ', style: TextStyle(color: Colors.white54, fontSize: 10)),
                     Expanded(
                       child: Text(
                         sender,
@@ -2206,7 +2206,7 @@ class StandbyVectorMapPainter extends CustomPainter {
 
       final standbyTp = TextPainter(
         text: const TextSpan(
-          text: 'CHẾ ĐỘ CHỜ',
+          text: 'ESPERA',
           style: TextStyle(color: cRadarText, fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 1.2),
         ),
         textDirection: TextDirection.ltr,

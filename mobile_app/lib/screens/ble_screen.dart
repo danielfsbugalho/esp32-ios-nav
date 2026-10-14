@@ -59,7 +59,7 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
         shadowColor: Colors.transparent,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppColors.primary, size: 20),
-          tooltip: 'Quay lại Bản đồ',
+          tooltip: 'Voltar ao mapa',
           onPressed: () {
             if (widget.onBackToMap != null) {
               widget.onBackToMap!();
@@ -68,7 +68,7 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
             }
           },
         ),
-        title: const Text('Kết nối Thiết bị', style: AppTypography.title2),
+        title: const Text('Conectar aparelho', style: AppTypography.title2),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(48),
           child: Container(
@@ -165,7 +165,7 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
                       ),
                       const SizedBox(height: 2),
                       const Text(
-                        'Đã ghép đôi iOS (Hệ thống iPhone)',
+                        'Pareado no iPhone',
                         style: AppTypography.caption,
                       ),
                     ],
@@ -185,7 +185,7 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
                         ? bleService.systemBondedDevice!.platformName
                         : 'ysiducw',
                   ),
-                  child: const Text('Kết nối ngay', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                  child: const Text('Conectar agora', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                 ),
               ],
             ),
@@ -198,7 +198,7 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SectionHeader(
-              title: 'Thiết bị xung quanh (${bleService.discoveredDevices.length})',
+              title: 'Aparelhos por perto (${bleService.discoveredDevices.length})',
               padding: EdgeInsets.zero,
             ),
             if (bleService.isScanning)
@@ -210,13 +210,13 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
                     child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary),
                   ),
                   SizedBox(width: 6),
-                  Text('Đang quét...', style: AppTypography.caption),
+                  Text('Buscando...', style: AppTypography.caption),
                 ],
               )
             else
               TextButton.icon(
                 icon: const Icon(Icons.refresh_rounded, size: 16, color: AppColors.primary),
-                label: const Text('Quét lại', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 13)),
+                label: const Text('Buscar de novo', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w600, fontSize: 13)),
                 onPressed: () => bleService.startScan(),
               ),
           ],
@@ -227,13 +227,13 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
         if (bleService.discoveredDevices.isEmpty)
           EmptyStateCard(
             icon: Icons.bluetooth_searching_rounded,
-            title: bleService.isScanning ? 'Đang tìm kiếm ESP32...' : 'Chưa tìm thấy thiết bị',
+            title: bleService.isScanning ? 'Procurando ESP32...' : 'Nenhum aparelho encontrado',
             description: bleService.isScanning
-                ? 'Hãy đảm bảo thiết bị ESP32 đã bật nguồn và ở gần bạn.'
-                : 'Bấm nút "Quét lại" để tìm kiếm thiết bị xung quanh.',
+                ? 'Verifique se o ESP32 está ligado e perto de você.'
+                : 'Toque em "Buscar de novo" para procurar aparelhos.',
             action: !bleService.isScanning
                 ? PrimaryActionButton(
-                    label: 'Bắt đầu quét',
+                    label: 'Iniciar busca',
                     icon: Icons.bluetooth_searching_rounded,
                     width: 180,
                     height: 42,
@@ -252,7 +252,7 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
               itemBuilder: (ctx, i) {
                 final item = bleService.discoveredDevices[i];
                 final d = item.device;
-                final name = d.platformName.isNotEmpty ? d.platformName : 'Thiết bị ESP32';
+                final name = d.platformName.isNotEmpty ? d.platformName : 'Aparelho ESP32';
                 final isThisConnected = bleService.isConnected && bleService.connectedDevice?.remoteId == d.remoteId;
 
                 return ListTile(
@@ -287,7 +287,7 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                           ),
                           onPressed: () => bleService.disconnect(),
-                          child: const Text('Ngắt', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+                          child: const Text('Desligar', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                         )
                       : ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -298,7 +298,7 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
                             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                           ),
                           onPressed: () => bleService.connectToDevice(d, displayName: name),
-                          child: const Text('Kết nối', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
+                          child: const Text('Conectar', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
                         ),
                 );
               },
@@ -321,8 +321,8 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
             children: [
               StatusBadge(
                 text: isConnected
-                    ? 'ĐÃ KẾT NỐI'
-                    : (bleService.isConnecting ? 'ĐANG KẾT NỐI...' : (bleService.isScanning ? 'ĐANG QUÉT' : 'CHƯA KẾT NỐI')),
+                    ? 'CONECTADO'
+                    : (bleService.isConnecting ? 'CONECTANDO...' : (bleService.isScanning ? 'BUSCANDO' : 'DESCONECTADO')),
                 color: isConnected
                     ? AppColors.success
                     : (bleService.isConnecting || bleService.isScanning ? AppColors.warning : AppColors.textSecondary),
@@ -332,14 +332,14 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
           ),
           const SizedBox(height: 12),
           Text(
-            isConnected ? (bleService.connectedDeviceName ?? 'ESP32 Device') : 'Sẵn sàng kết nối',
+            isConnected ? (bleService.connectedDeviceName ?? 'ESP32 Device') : 'Pronto para conectar',
             style: AppTypography.largeTitle,
           ),
           const SizedBox(height: 4),
           Text(
             isConnected
-                ? 'Dữ liệu điều hướng đang được truyền trực tiếp đến màn hình ESP32.'
-                : 'Bật nguồn ESP32 và đảm bảo Bluetooth trên iPhone đang bật.',
+                ? 'Os dados de navegação estão sendo enviados para a tela do ESP32.'
+                : 'Ligue o ESP32 e confira se o Bluetooth do iPhone está ativado.',
             style: AppTypography.subheadline,
           ),
           if (isConnected) ...[
@@ -355,7 +355,7 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
                       padding: const EdgeInsets.symmetric(vertical: 10),
                     ),
                     icon: const Icon(Icons.link_off_rounded, size: 18),
-                    label: const Text('Ngắt kết nối', style: TextStyle(fontWeight: FontWeight.w600)),
+                    label: const Text('Desconectar', style: TextStyle(fontWeight: FontWeight.w600)),
                     onPressed: () => bleService.disconnect(),
                   ),
                 ),
@@ -383,7 +383,7 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   StatusBadge(
-                    text: isWifi ? 'WIFI HOTSPOT ĐÃ KẾT NỐI' : 'CHƯA KẾT NỐI WIFI',
+                    text: isWifi ? 'WI-FI CONECTADO' : 'WI-FI DESCONECTADO',
                     color: isWifi ? AppColors.success : AppColors.textSecondary,
                     icon: Icons.wifi_rounded,
                   ),
@@ -391,14 +391,14 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
               ),
               const SizedBox(height: 12),
               Text(
-                isWifi ? 'IP: ${bleService.wifiIp}' : 'Điểm phát sóng iPhone',
+                isWifi ? 'IP: ${bleService.wifiIp}' : 'Acesso Pessoal do iPhone',
                 style: AppTypography.title2,
               ),
               const SizedBox(height: 4),
               Text(
                 isWifi
-                    ? 'ESP32 đang nhận luồng hình ảnh 20-30 FPS mượt mà qua WiFi Hotspot.'
-                    : 'Gửi tên và mật khẩu Hotspot của iPhone để ESP32 tự động kết nối.',
+                    ? 'O ESP32 está recebendo imagens a 20-30 FPS pelo Wi-Fi.'
+                    : 'Envie o nome e a senha do Acesso Pessoal do iPhone para o ESP32 conectar sozinho.',
                 style: AppTypography.subheadline,
               ),
             ],
@@ -407,19 +407,19 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
         const SizedBox(height: 16),
 
         // Config Form Card
-        const SectionHeader(title: 'Cấu hình Điểm phát sóng (Hotspot)', padding: EdgeInsets.zero),
+        const SectionHeader(title: 'Configurar Acesso Pessoal (Wi-Fi)', padding: EdgeInsets.zero),
         const SizedBox(height: 8),
         MapCard(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Tên Hotspot (Tên iPhone trong Cài đặt)', style: AppTypography.footnote),
+              const Text('Nome da rede (nome do iPhone nos Ajustes)', style: AppTypography.footnote),
               const SizedBox(height: 6),
               TextField(
                 controller: _wifiSsidController,
                 decoration: const InputDecoration(
-                  hintText: 'Ví dụ: iPhone của tôi',
+                  hintText: 'Exemplo: iPhone de Francisco',
                   filled: true,
                   fillColor: AppColors.canvas,
                   contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -430,13 +430,13 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
                 ),
               ),
               const SizedBox(height: 14),
-              const Text('Mật khẩu Hotspot iPhone', style: AppTypography.footnote),
+              const Text('Senha do Acesso Pessoal', style: AppTypography.footnote),
               const SizedBox(height: 6),
               TextField(
                 controller: _wifiPassController,
                 obscureText: true,
                 decoration: const InputDecoration(
-                  hintText: 'Nhập mật khẩu WiFi Hotspot',
+                  hintText: 'Digite a senha do Wi-Fi',
                   filled: true,
                   fillColor: AppColors.canvas,
                   contentPadding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -448,7 +448,7 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
               ),
               const SizedBox(height: 18),
               PrimaryActionButton(
-                label: 'Gửi cấu hình sang ESP32',
+                label: 'Enviar para o ESP32',
                 icon: Icons.send_rounded,
                 onPressed: bleService.isConnected
                     ? () async {
@@ -460,8 +460,8 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(success
-                                  ? 'Đã gửi Hotspot sang ESP32 thành công!'
-                                  : 'Gửi cấu hình thất bại! Hãy kiểm tra lại kết nối Bluetooth.'),
+                                  ? 'Configuração enviada ao ESP32!'
+                                  : 'Falha ao enviar! Verifique a conexão Bluetooth.'),
                               backgroundColor: success ? AppColors.success : AppColors.danger,
                             ),
                           );
@@ -472,7 +472,7 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
               if (!bleService.isConnected) ...[
                 const SizedBox(height: 8),
                 const Text(
-                  'Cần kết nối Bluetooth với ESP32 trước để gửi cấu hình WiFi.',
+                  'Conecte o ESP32 por Bluetooth antes de enviar o Wi-Fi.',
                   style: TextStyle(color: AppColors.warning, fontSize: 12),
                 ),
               ],
@@ -487,20 +487,20 @@ class _BleScreenState extends State<BleScreen> with SingleTickerProviderStateMix
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: const [
-              Text("HƯỚNG DẪN KẾT NỐI HOTSPOT:", style: AppTypography.headline),
+              Text("COMO CONECTAR PELO WI-FI:", style: AppTypography.headline),
               SizedBox(height: 8),
               Text(
-                "1. Bật Điểm truy cập cá nhân (Personal Hotspot) trong Cài đặt iPhone.",
+                "1. Ative o Acesso Pessoal nos Ajustes do iPhone.",
                 style: AppTypography.subheadline,
               ),
               SizedBox(height: 4),
               Text(
-                "2. Bật tùy chọn Tối đa hóa khả năng tương thích (Maximize Compatibility) nếu có.",
+                "2. Ative a opção Maximizar Compatibilidade, se houver.",
                 style: AppTypography.subheadline,
               ),
               SizedBox(height: 4),
               Text(
-                "3. Luồng hình ảnh bản đồ sẽ tự động chuyển sang tốc độ cao (20-30 FPS).",
+                "3. As imagens do mapa passam a ser enviadas em alta velocidade (20-30 FPS).",
                 style: AppTypography.subheadline,
               ),
             ],

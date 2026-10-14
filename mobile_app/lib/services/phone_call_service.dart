@@ -27,7 +27,7 @@ class PhoneCallService extends ChangeNotifier {
 
   bool get isRinging => _isRinging;
   bool get isInCall => _isInCall;
-  String get callerName => _callerName.isNotEmpty ? _callerName : 'Cuộc gọi đến';
+  String get callerName => _callerName.isNotEmpty ? _callerName : 'Chamada recebida';
   String get phoneNumber => _phoneNumber;
   String get callApp => _callApp;
   bool get showSmsNotification => _showSmsNotification;
@@ -40,7 +40,7 @@ class PhoneCallService extends ChangeNotifier {
       switch (call.method) {
         case 'onIncomingCall':
           final args = call.arguments != null ? Map<String, dynamic>.from(call.arguments as Map) : {};
-          final name = args['name'] as String? ?? 'Cuộc gọi đến';
+          final name = args['name'] as String? ?? 'Chamada recebida';
           final number = args['number'] as String? ?? '';
           final app = args['app'] as String? ?? 'sim';
           _onIncomingCall(name, number, app: app);
@@ -66,13 +66,13 @@ class PhoneCallService extends ChangeNotifier {
     notifyListeners();
 
     final isGeneric = name.toLowerCase() == 'cuoc goi den' ||
-        name.toLowerCase() == 'cuộc gọi đến' ||
+        name.toLowerCase() == 'chamada recebida' ||
         name.toLowerCase() == 'unknown' ||
         name.isEmpty;
     final hasRealNumber = number.isNotEmpty && number != 'unknown';
 
-    final title = !isGeneric ? name : (app == 'zalo' ? 'Zalo Audio Call' : 'Cuộc gọi đến');
-    final msg = hasRealNumber && !isGeneric ? number : 'đang gọi đến...';
+    final title = !isGeneric ? name : (app == 'zalo' ? 'Zalo Audio Call' : 'Chamada recebida');
+    final msg = hasRealNumber && !isGeneric ? number : 'está ligando...';
     _bleService.sendRawString('{"type":"CALL","app":"$app","title":"$title","msg":"$msg"}');
   }
 
@@ -89,7 +89,7 @@ class PhoneCallService extends ChangeNotifier {
   void triggerMockCall({String? name, String? number, String app = 'sim'}) {
     final cName = name?.trim().isNotEmpty == true
         ? name!.trim()
-        : (app == 'zalo' ? 'Nguyễn Văn A' : 'Mẹ (0912.345.678)');
+        : (app == 'zalo' ? 'João Silva' : 'Mãe (11 91234-5678)');
     final cNum = number?.trim().isNotEmpty == true
         ? number!.trim()
         : (app == 'zalo' ? 'Zalo Audio Call' : '0912 345 678');
@@ -107,10 +107,10 @@ class PhoneCallService extends ChangeNotifier {
   void triggerMockSms({String? sender, String? message, String app = 'zalo'}) {
     _lastSmsSender = sender?.trim().isNotEmpty == true
         ? sender!.trim()
-        : (app == 'zalo' ? 'Anh Nam' : (app == 'messenger' ? 'Linh Hoàng' : '0988.123.456'));
+        : (app == 'zalo' ? 'Anh Nam' : (app == 'messenger' ? 'Ana Souza' : '0988.123.456'));
     _lastSmsMessage = message?.trim().isNotEmpty == true
         ? message!.trim()
-        : (app == 'zalo' ? 'Bạn đang ở đâu đấy? Chiều nay đi cà phê nhé!' : 'Mã xác thực OTP của bạn là 849201');
+        : (app == 'zalo' ? 'Onde você está? Vamos tomar um café hoje?' : 'Seu código de verificação é 849201');
     _smsApp = app;
     _showSmsNotification = true;
     notifyListeners();
